@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 82" fill="none">
+  <defs>
+    <linearGradient id="flame" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#991B1B"/>
+      <stop offset="50%" stop-color="#DC2626"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <clipPath id="brasaClip">
+      <rect x="0" y="0" width="213" height="82"/>
+    </clipPath>
+  </defs>
+
+  <!-- Fondo oscuro -->
+  <rect width="390" height="82" fill="#1a1a1a"/>
+
+  <!-- Flame icon -->
+  <g transform="translate(4, 9) scale(0.93)">
+    <path d="M28 56C16 56 6 46 6 34C6 24 12 16 18 10C18 18 22 22 26 20C24 14 26 6 32 0C34 8 40 14 40 24C44 20 44 14 44 14C48 20 52 28 52 34C52 46 42 56 28 56Z" fill="url(#flame)"/>
+    <path d="M28 56C22 56 16 50 16 42C16 36 20 32 24 28C24 32 26 34 28 34C27 30 28 26 32 22C33 28 36 32 36 38C38 36 38 32 38 32C40 36 42 40 42 44C42 50 36 56 28 56Z" fill="#FCD34D" opacity="0.85"/>
+  </g>
+
+  <!-- BRASA en blanco -->
+  <text
+    x="58" y="53"
+    font-family="'Arial Black', 'Arial', sans-serif"
+    font-size="46"
+    font-weight="900"
+    fill="#FFFFFF"
+    clip-path="url(#brasaClip)"
+  >BRASA</text>
+
+  <!-- LAND en rojo -->
+  <text
+    x="207" y="53"
+    font-family="'Arial Black', 'Arial', sans-serif"
+    font-size="46"
+    font-weight="900"
+    fill="#DC2626"
+  >LAND</text>
+
+  <!-- Tagline -->
+  <text
+    x="58" y="71"
+    font-family="'Helvetica Neue', 'Arial', sans-serif"
+    font-size="9.5"
+    fill="#9CA3AF"
+    letter-spacing="3.8"
+  >COCINA A LA BRASA</text>
+</svg>

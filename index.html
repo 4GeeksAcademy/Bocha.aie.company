@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Brasaland — Cadena de restaurantes de cocina a la brasa. 14 locales en Colombia y Estados Unidos. Brasaland — Grilled cuisine restaurant chain. 14 locations in Colombia and the United States.">
+  <meta name="keywords"
+    content="Brasaland, restaurante, brasa, grill, Medellín, Miami, Florida, Colombia, cocina a la brasa, grilled cuisine">
+  <title>Brasaland — Cocina a la Brasa | Grilled Cuisine</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brasa: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              200: '#FED7AA',
+              300: '#FDBA74',
+              400: '#FB923C',
+              500: '#F97316',
+              600: '#EA580C',
+              700: '#C2410C',
+              800: '#9A3412',
+              900: '#7C2D12',
+            },
+            ember: {
+              50: '#FEF2F2',
+              100: '#FEE2E2',
+              200: '#FECACA',
+              300: '#FCA5A5',
+              400: '#F87171',
+              500: '#EF4444',
+              600: '#DC2626',
+              700: '#B91C1C',
+              800: '#991B1B',
+              900: '#7F1D1D',
+            },
+            carbon: {
+              50: '#FAFAF9',
+              100: '#F5F5F4',
+              200: '#E7E5E4',
+              300: '#D6D3D1',
+              400: '#A8A29E',
+              500: '#78716C',
+              600: '#57534E',
+              700: '#44403C',
+              800: '#292524',
+              900: '#1C1917',
+            },
+            gold: {
+              400: '#FBBF24',
+              500: '#F59E0B',
+              600: '#D97706',
+            }
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap"
+    rel="stylesheet">
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Brasaland",
+    "description": "Cadena de restaurantes de cocina a la brasa con 14 locales en Colombia y Estados Unidos.",
+    "url": "https://www.brasaland.com",
+    "logo": "assets/logo.svg",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?w=1200",
+    "cuisine": "Grilled / A la brasa",
+    "servesCuisine": ["Grilled", "Latin American", "American BBQ"],
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "Sede Principal",
+        "addressLocality": "Medellín",
+        "addressRegion": "Antioquia",
+        "addressCountry": "CO"
+      },
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "Oficina Comercial",
+        "addressLocality": "Miami",
+        "addressRegion": "FL",
+        "addressCountry": "US"
+      }
+    ],
+    "foundingDate": "2008",
+    "founder": {
+      "@type": "Person",
+      "name": "Familia Restrepo"
+    },
+    "numberOfEmployees": {
+      "@type": "QuantitativeValue",
+      "value": 115
+    },
+    "areaServed": ["Colombia", "United States"],
+    "sameAs": []
+  }
+  </script>
+</head>
+
+<body class="bg-carbon-50 font-body text-carbon-800 antialiased">
+
+  <!-- ========== HEADER / NAV ========== -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-carbon-900/95 backdrop-blur-sm border-b border-carbon-700/50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20"
+      aria-label="Main navigation">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-2 shrink-0" aria-label="Brasaland Home">
+        <img src="assets/logo_dark.svg" alt="Brasaland — Cocina a la Brasa" class="h-10 sm:h-12 w-auto">
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#about" class="text-carbon-300 hover:text-gold-400 transition-colors text-sm font-medium tracking-wide"
+          data-lang-es="Nosotros" data-lang-en="About Us">Nosotros</a>
+        <a href="#food" class="text-carbon-300 hover:text-gold-400 transition-colors text-sm font-medium tracking-wide"
+          data-lang-es="Nuestra Cocina" data-lang-en="Our Food">Nuestra Cocina</a>
+        <a href="#locations"
+          class="text-carbon-300 hover:text-gold-400 transition-colors text-sm font-medium tracking-wide"
+          data-lang-es="Locales" data-lang-en="Locations">Locales</a>
+        <a href="#loyalty"
+          class="text-carbon-300 hover:text-gold-400 transition-colors text-sm font-medium tracking-wide"
+          data-lang-es="Fidelización" data-lang-en="Loyalty">Fidelización</a>
+        <a href="application.html"
+          class="bg-ember-600 hover:bg-ember-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+          data-lang-es="Registrarse" data-lang-en="Sign Up">Registrarse</a>
+      </div>
+
+      <!-- Language Toggle + Mobile Menu -->
+      <div class="flex items-center gap-3">
+        <button id="lang-toggle" onclick="toggleLanguage()"
+          class="flex items-center gap-1.5 text-carbon-400 hover:text-gold-400 transition-colors text-xs font-medium border border-carbon-600 rounded-full px-3 py-1.5"
+          aria-label="Cambiar idioma / Switch language">
+          <span id="lang-label">EN</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()"
+          class="md:hidden text-carbon-300 hover:text-gold-400 transition-colors p-1" aria-label="Menu"
+          aria-expanded="false">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-carbon-900 border-t border-carbon-700/50 px-4 pb-4" role="menu">
+      <a href="#about"
+        class="block py-3 text-carbon-300 hover:text-gold-400 transition-colors text-sm font-medium border-b border-carbon-800"
+        role="menuitem" data-lang-es="Nosotros" data-lang-en="About Us">Nosotros</a>
+      <a href="#food"
+        class="block py-3 text-carbon-300 hover:text-gold-400 transition-colors text-sm font-medium border-b border-carbon-800"
+        role="menuitem" data-lang-es="Nuestra Cocina" data-lang-en="Our Food">Nuestra Cocina</a>
+      <a href="#locations"
+        class="block py-3 text-carbon-300 hover:text-gold-400 transition-colors text-sm font-medium border-b border-carbon-800"
+        role="menuitem" data-lang-es="Locales" data-lang-en="Locations">Locales</a>
+      <a href="#loyalty"
+        class="block py-3 text-carbon-300 hover:text-gold-400 transition-colors text-sm font-medium border-b border-carbon-800"
+        role="menuitem" data-lang-es="Fidelización" data-lang-en="Loyalty">Fidelización</a>
+      <a href="application.html"
+        class="block mt-3 bg-ember-600 hover:bg-ember-700 text-white text-center px-5 py-3 rounded-lg text-sm font-semibold transition-colors"
+        role="menuitem" data-lang-es="Registrarse" data-lang-en="Sign Up">Registrarse</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========== HERO ========== -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20">
+      <!-- Background image -->
+      <div class="absolute inset-0">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1920&q=80"
+          alt="Carne a la brasa con llamas y carbón ardiente" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-b from-carbon-900/80 via-carbon-900/60 to-carbon-900/90"></div>
+      </div>
+      <!-- Content -->
+      <div class="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto">
+        <p class="text-gold-400 font-body text-sm sm:text-base tracking-[0.3em] uppercase mb-4 sm:mb-6"
+          data-lang-es="Desde 2008 · Medellín · Miami" data-lang-en="Since 2008 · Medellín · Miami">Desde 2008 ·
+          Medellín · Miami</p>
+        <h1 class="font-display text-4xl sm:text-5xl md:text-7xl font-bold text-white leading-tight mb-6 sm:mb-8">
+          <span data-lang-es="El sabor de la brasa," data-lang-en="The flavor of the grill,">El sabor de la
+            brasa,</span><br>
+          <span class="text-gold-400" data-lang-es="en cada bocado" data-lang-en="in every bite">en cada bocado</span>
+        </h1>
+        <p class="text-carbon-300 text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed"
+          data-lang-es="14 restaurantes en Colombia y Estados Unidos. Una sola promesa: la misma cocina auténtica a la brasa, el mismo servicio cálido, la misma pasión."
+          data-lang-en="14 restaurants in Colombia and the United States. One promise: the same authentic grilled cuisine, the same warm service, the same passion.">
+          14 restaurantes en Colombia y Estados Unidos. Una sola promesa: la misma cocina auténtica a la brasa, el mismo
+          servicio cálido, la misma pasión.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="application.html"
+            class="bg-ember-600 hover:bg-ember-700 text-white px-8 py-4 rounded-lg font-semibold text-base sm:text-lg transition-all hover:shadow-lg hover:shadow-ember-600/30"
+            data-lang-es="Únete a Brasa Points" data-lang-en="Join Brasa Points">Únete a Brasa Points</a>
+          <a href="#food"
+            class="border-2 border-white/30 hover:border-gold-400 text-white hover:text-gold-400 px-8 py-4 rounded-lg font-semibold text-base sm:text-lg transition-all"
+            data-lang-es="Conoce nuestra cocina" data-lang-en="Discover our food">Conoce nuestra cocina</a>
+        </div>
+      </div>
+      <!-- Scroll indicator -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <svg class="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section id="about" class="py-16 sm:py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div>
+            <span class="text-ember-600 font-semibold text-sm tracking-[0.2em] uppercase"
+              data-lang-es="Nuestra Historia" data-lang-en="Our Story">Nuestra Historia</span>
+            <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-carbon-900 mt-3 mb-6 leading-tight"
+              data-lang-es="De un local familiar a 14 restaurantes en dos países"
+              data-lang-en="From a family restaurant to 14 locations in two countries">De un local familiar a 14
+              restaurantes en dos países</h2>
+            <p class="text-carbon-600 text-base sm:text-lg leading-relaxed mb-6"
+              data-lang-es="Brasaland nació en 2008 en Medellín, Colombia, como un único restaurante familiar con una obsesión: que cada plato a la brasa tuviera el mismo sabor inconfundible. Quince años después, esa obsesión nos llevó a 14 locales en Colombia y Florida, con más de 115 personas comprometidas con esa promesa."
+              data-lang-en="Brasaland was born in 2008 in Medellín, Colombia, as a single family restaurant with one obsession: that every grilled dish would have the same unmistakable flavor. Fifteen years later, that obsession has taken us to 14 locations in Colombia and Florida, with over 115 people committed to that promise.">
+              Brasaland nació en 2008 en Medellín, Colombia, como un único restaurante familiar con una obsesión: que
+              cada plato a la brasa tuviera el mismo sabor inconfundible. Quince años después, esa obsesión nos llevó a
+              14 locales en Colombia y Florida, con más de 115 personas comprometidas con esa promesa.</p>
+            <p class="text-carbon-600 text-base sm:text-lg leading-relaxed"
+              data-lang-es="Hoy, liderados por Mariana Restrepo, estamos construyendo el futuro digital de Brasaland sin perder lo que nos hace únicos: una comida que sabe igual en Medellín y en Miami, un servicio cálido y una cocina que se mueve rápido."
+              data-lang-en="Today, led by Mariana Restrepo, we are building the digital future of Brasaland without losing what makes us unique: food that tastes the same in Medellín and Miami, warm service, and a kitchen that moves fast.">
+              Hoy, liderados por Mariana Restrepo, estamos construyendo el futuro digital de Brasaland sin perder lo que
+              nos hace únicos: una comida que sabe igual en Medellín y en Miami, un servicio cálido y una cocina que se
+              mueve rápido.</p>
+          </div>
+          <div class="relative">
+            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80"
+              alt="Deliciosas costillas a la brasa con salsa y guarniciones"
+              class="rounded-2xl shadow-2xl w-full h-72 sm:h-96 object-cover">
+            <div
+              class="absolute -bottom-6 -left-6 bg-ember-600 text-white rounded-xl p-4 sm:p-6 shadow-xl hidden sm:block">
+              <p class="font-display text-3xl font-bold">15+</p>
+              <p class="text-sm text-white/80" data-lang-es="Años de pasión" data-lang-en="Years of passion">Años de
+                pasión</p>
+            </div>
+          </div>
+        </div>
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 sm:mt-20">
+          <div class="text-center p-6 bg-carbon-50 rounded-xl">
+            <p class="font-display text-3xl sm:text-4xl font-bold text-ember-600">14</p>
+            <p class="text-carbon-500 text-sm mt-1" data-lang-es="Restaurantes" data-lang-en="Restaurants">Restaurantes
+            </p>
+          </div>
+          <div class="text-center p-6 bg-carbon-50 rounded-xl">
+            <p class="font-display text-3xl sm:text-4xl font-bold text-ember-600">2</p>
+            <p class="text-carbon-500 text-sm mt-1" data-lang-es="Países" data-lang-en="Countries">Países</p>
+          </div>
+          <div class="text-center p-6 bg-carbon-50 rounded-xl">
+            <p class="font-display text-3xl sm:text-4xl font-bold text-ember-600">115+</p>
+            <p class="text-carbon-500 text-sm mt-1" data-lang-es="Colaboradores" data-lang-en="Team Members">
+              Colaboradores</p>
+          </div>
+          <div class="text-center p-6 bg-carbon-50 rounded-xl">
+            <p class="font-display text-3xl sm:text-4xl font-bold text-ember-600">2008</p>
+            <p class="text-carbon-500 text-sm mt-1" data-lang-es="Fundación" data-lang-en="Founded">Fundación</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== OUR FOOD ========== -->
+    <section id="food" class="py-16 sm:py-24 bg-carbon-900">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 sm:mb-16">
+          <span class="text-gold-400 font-semibold text-sm tracking-[0.2em] uppercase" data-lang-es="Nuestra Cocina"
+            data-lang-en="Our Food">Nuestra Cocina</span>
+          <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-4"
+            data-lang-es="El fuego es nuestro ingrediente secreto" data-lang-en="Fire is our secret ingredient">El fuego
+            es nuestro ingrediente secreto</h2>
+          <p class="text-carbon-400 text-base sm:text-lg max-w-2xl mx-auto"
+            data-lang-es="Cada corte, cada salsa, cada guarnición preparada con la técnica y el cariño que nos define desde el primer día."
+            data-lang-en="Every cut, every sauce, every side dish prepared with the technique and care that has defined us since day one.">
+            Cada corte, cada salsa, cada guarnición preparada con la técnica y el cariño que nos define desde el primer
+            día.</p>
+        </div>
+        <!-- Food grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <article class="group relative overflow-hidden rounded-2xl">
+            <img src="https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=600&q=80"
+              alt="Hamburguesa gourmet a la brasa con queso fundido y vegetales frescos"
+              class="w-full h-64 sm:h-80 object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-carbon-900/80 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="font-display text-xl font-bold text-white" data-lang-es="Hamburguesas Brasaland"
+                data-lang-en="Brasaland Burgers">Hamburguesas Brasaland</h3>
+              <p class="text-carbon-300 text-sm mt-1" data-lang-es="Preparadas al carbón con ingredientes premium"
+                data-lang-en="Charcoal-grilled with premium ingredients">Preparadas al carbón con ingredientes premium
+              </p>
+            </div>
+          </article>
+          <article class="group relative overflow-hidden rounded-2xl">
+            <img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=600&q=80"
+              alt="Cortes de carne premium asados a la parrilla con hierbas"
+              class="w-full h-64 sm:h-80 object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-carbon-900/80 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="font-display text-xl font-bold text-white" data-lang-es="Cortes a la Parrilla"
+                data-lang-en="Grilled Cuts">Cortes a la Parrilla</h3>
+              <p class="text-carbon-300 text-sm mt-1"
+                data-lang-es="Los mejores cortes seleccionados y cocinados al punto"
+                data-lang-en="The finest cuts selected and cooked to perfection">Los mejores cortes seleccionados y
+                cocinados al punto</p>
+            </div>
+          </article>
+          <article class="group relative overflow-hidden rounded-2xl sm:col-span-2 lg:col-span-1">
+            <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=80"
+              alt="Pollo a la brasa dorado con especias y acompañamientos"
+              class="w-full h-64 sm:h-80 object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-carbon-900/80 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="font-display text-xl font-bold text-white" data-lang-es="Pollo a la Brasa"
+                data-lang-en="Flame-Roasted Chicken">Pollo a la Brasa</h3>
+              <p class="text-carbon-300 text-sm mt-1" data-lang-es="Marinado por 24 horas y asado lentamente"
+                data-lang-en="Marinated for 24 hours and slow-roasted">Marinado por 24 horas y asado lentamente</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== LOCATIONS ========== -->
+    <section id="locations" class="py-16 sm:py-24 bg-brasa-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 sm:mb-16">
+          <span class="text-ember-600 font-semibold text-sm tracking-[0.2em] uppercase" data-lang-es="Nuestros Locales"
+            data-lang-en="Our Locations">Nuestros Locales</span>
+          <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-carbon-900 mt-3 mb-4"
+            data-lang-es="Dos países, un mismo sabor" data-lang-en="Two countries, one same flavor">Dos países, un mismo
+            sabor</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Colombia -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+            <img src="https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=800&q=80"
+              alt="Vista panorámica de la ciudad de Medellín, Colombia" class="w-full h-48 sm:h-56 object-cover">
+            <div class="p-6 sm:p-8">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="text-3xl" role="img" aria-label="Colombia flag">🇨🇴</span>
+                <h3 class="font-display text-2xl font-bold text-carbon-900">Colombia</h3>
+              </div>
+              <p class="text-carbon-600 mb-4"
+                data-lang-es="Sede principal en Medellín con restaurantes en las principales ciudades. Donde todo comenzó."
+                data-lang-en="Headquarters in Medellín with restaurants in major cities. Where it all began.">Sede
+                principal en Medellín con restaurantes en las principales ciudades. Donde todo comenzó.</p>
+              <div class="flex items-center gap-2 text-ember-600 font-semibold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span data-lang-es="Múltiples locales" data-lang-en="Multiple locations">Múltiples locales</span>
+              </div>
+            </div>
+          </div>
+          <!-- USA -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+            <img src="https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?auto=format&fit=crop&w=800&q=80"
+              alt="Vista del skyline de Miami, Florida al atardecer" class="w-full h-48 sm:h-56 object-cover">
+            <div class="p-6 sm:p-8">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="text-3xl" role="img" aria-label="United States flag">🇺🇸</span>
+                <h3 class="font-display text-2xl font-bold text-carbon-900">Florida, USA</h3>
+              </div>
+              <p class="text-carbon-600 mb-4"
+                data-lang-es="Oficina comercial y restaurantes en el estado de Florida. El sabor colombiano en territorio americano."
+                data-lang-en="Commercial office and restaurants in the state of Florida. Colombian flavor on American soil.">
+                Oficina comercial y restaurantes en el estado de Florida. El sabor colombiano en territorio americano.
+              </p>
+              <div class="flex items-center gap-2 text-ember-600 font-semibold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span data-lang-es="Múltiples locales" data-lang-en="Multiple locations">Múltiples locales</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== LOYALTY / BRASA POINTS ========== -->
+    <section id="loyalty" class="py-16 sm:py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <!-- Left content -->
+          <div class="order-2 lg:order-1">
+            <span class="text-gold-500 font-semibold text-sm tracking-[0.2em] uppercase"
+              data-lang-es="Programa de Fidelización" data-lang-en="Loyalty Program">Programa de Fidelización</span>
+            <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-carbon-900 mt-3 mb-6 leading-tight"
+              data-lang-es="Brasa Points: tu fidelidad tiene recompensa"
+              data-lang-en="Brasa Points: your loyalty is rewarded">Brasa Points: tu fidelidad tiene recompensa</h2>
+            <p class="text-carbon-600 text-base sm:text-lg leading-relaxed mb-8"
+              data-lang-es="Estamos construyendo una experiencia digital personalizada para nuestros clientes más fieles. Registrate, acumulá puntos con cada compra y recibí ofertas exclusivas pensadas para vos."
+              data-lang-en="We are building a personalized digital experience for our most loyal customers. Sign up, earn points with every purchase, and receive exclusive offers designed for you.">
+              Estamos construyendo una experiencia digital personalizada para nuestros clientes más fieles. Registrate,
+              acumulá puntos con cada compra y recibí ofertas exclusivas pensadas para vos.</p>
+            <div class="space-y-4 mb-8">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 shrink-0 bg-ember-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-ember-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-carbon-900" data-lang-es="Acumulá puntos" data-lang-en="Earn points">
+                    Acumulá puntos</h3>
+                  <p class="text-carbon-500 text-sm"
+                    data-lang-es="Cada compra suma puntos a tu cuenta, en cualquier local de Colombia o USA."
+                    data-lang-en="Every purchase adds points to your account, at any location in Colombia or the USA.">
+                    Cada compra suma puntos a tu cuenta, en cualquier local de Colombia o USA.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 shrink-0 bg-gold-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-carbon-900" data-lang-es="Ofertas personalizadas"
+                    data-lang-en="Personalized offers">Ofertas personalizadas</h3>
+                  <p class="text-carbon-500 text-sm"
+                    data-lang-es="Recibí promociones basadas en tus preferencias y hábitos de consumo."
+                    data-lang-en="Receive promotions based on your preferences and eating habits.">Recibí promociones
+                    basadas en tus preferencias y hábitos de consumo.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 shrink-0 bg-brasa-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-brasa-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.75 1.75 0 003 15.546m18 0v-2.796a2 2 0 00-.586-1.414l-3.828-3.829A2 2 0 0015.172 7H8a2 2 0 00-2 2v6.546m18 0a1.75 1.75 0 01-1.5.454M3 15.546a1.75 1.75 0 001.5.454m0 0v2a2 2 0 002 2h10a2 2 0 002-2v-2" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-carbon-900" data-lang-es="Sorpresas en fechas especiales"
+                    data-lang-en="Special date surprises">Sorpresas en fechas especiales</h3>
+                  <p class="text-carbon-500 text-sm"
+                    data-lang-es="Te celebramos en tu cumpleaños y otras fechas importantes con regalos exclusivos."
+                    data-lang-en="We celebrate you on your birthday and other important dates with exclusive gifts.">Te
+                    celebramos en tu cumpleaños y otras fechas importantes con regalos exclusivos.</p>
+                </div>
+              </div>
+            </div>
+            <a href="application.html"
+              class="inline-flex items-center gap-2 bg-ember-600 hover:bg-ember-700 text-white px-8 py-4 rounded-lg font-semibold text-base transition-all hover:shadow-lg hover:shadow-ember-600/30">
+              <span data-lang-es="Registrarse ahora" data-lang-en="Sign up now">Registrarse ahora</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </div>
+          <!-- Right image -->
+          <div class="order-1 lg:order-2 relative">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80"
+              alt="Mesa de restaurante con platos gourmet a la brasa servidos elegantemente"
+              class="rounded-2xl shadow-2xl w-full h-72 sm:h-96 object-cover">
+            <div
+              class="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 bg-gold-500 text-carbon-900 rounded-full w-20 h-20 sm:w-28 sm:h-28 flex flex-col items-center justify-center shadow-xl hidden sm:flex">
+              <span class="font-display text-xl sm:text-2xl font-bold" data-lang-es="NUEVO"
+                data-lang-en="NEW">NUEVO</span>
+              <span class="text-xs font-medium">2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CTA ========== -->
+    <section
+      class="py-16 sm:py-24 bg-gradient-to-br from-ember-700 via-ember-800 to-carbon-900 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0"
+          style="background-image: url(&quot;data:image/svg+xml,%3Csvg%20width='60'%20height='60'%20xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle%20cx='30'%20cy='30'%20r='1.5'%20fill='white'/%3E%3C/svg%3E&quot;); background-size: 60px 60px;">
+        </div>
+      </div>
+      <div class="relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6">
+        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6"
+          data-lang-es="¿Listo para ser parte de la familia Brasaland?"
+          data-lang-en="Ready to be part of the Brasaland family?">¿Listo para ser parte de la familia Brasaland?</h2>
+        <p class="text-ember-100 text-base sm:text-lg max-w-2xl mx-auto mb-8"
+          data-lang-es="Registrate en Brasa Points y empezá a disfrutar de una experiencia gastronómica personalizada. Puntos, ofertas y sorpresas te esperan."
+          data-lang-en="Sign up for Brasa Points and start enjoying a personalized dining experience. Points, offers, and surprises await you.">
+          Registrate en Brasa Points y empezá a disfrutar de una experiencia gastronómica personalizada. Puntos, ofertas
+          y sorpresas te esperan.</p>
+        <a href="application.html"
+          class="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-carbon-900 px-8 py-4 rounded-lg font-bold text-lg transition-all hover:shadow-lg hover:shadow-gold-500/30">
+          <span data-lang-es="Crear mi cuenta" data-lang-en="Create my account">Crear mi cuenta</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-carbon-900 text-carbon-400 py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <!-- Brand -->
+        <div class="sm:col-span-2 lg:col-span-1">
+          <img src="assets/logo_dark.svg" alt="Brasaland" class="h-10 w-auto mb-4">
+          <p class="text-sm leading-relaxed"
+            data-lang-es="Cocina a la brasa desde 2008. Medellín, Colombia · Miami, Florida."
+            data-lang-en="Grilled cuisine since 2008. Medellín, Colombia · Miami, Florida.">Cocina a la brasa desde
+            2008. Medellín, Colombia · Miami, Florida.</p>
+        </div>
+        <!-- Quick links -->
+        <div>
+          <h4 class="text-white font-semibold mb-4 text-sm tracking-wide" data-lang-es="Navegación"
+            data-lang-en="Navigation">Navegación</h4>
+          <ul class="space-y-2">
+            <li><a href="#about" class="text-sm hover:text-gold-400 transition-colors" data-lang-es="Nosotros"
+                data-lang-en="About Us">Nosotros</a></li>
+            <li><a href="#food" class="text-sm hover:text-gold-400 transition-colors" data-lang-es="Nuestra Cocina"
+                data-lang-en="Our Food">Nuestra Cocina</a></li>
+            <li><a href="#locations" class="text-sm hover:text-gold-400 transition-colors" data-lang-es="Locales"
+                data-lang-en="Locations">Locales</a></li>
+            <li><a href="#loyalty" class="text-sm hover:text-gold-400 transition-colors" data-lang-es="Brasa Points"
+                data-lang-en="Brasa Points">Brasa Points</a></li>
+          </ul>
+        </div>
+        <!-- Contact -->
+        <div>
+          <h4 class="text-white font-semibold mb-4 text-sm tracking-wide" data-lang-es="Contacto"
+            data-lang-en="Contact">Contacto</h4>
+          <ul class="space-y-2">
+            <li class="text-sm">📍 Medellín, Colombia</li>
+            <li class="text-sm">📍 Miami, FL, USA</li>
+            <li><a href="mailto:info@brasaland.com"
+                class="text-sm hover:text-gold-400 transition-colors">info@brasaland.com</a></li>
+          </ul>
+        </div>
+        <!-- Register -->
+        <div>
+          <h4 class="text-white font-semibold mb-4 text-sm tracking-wide" data-lang-es="Únete" data-lang-en="Join Us">
+            Únete</h4>
+          <p class="text-sm mb-4" data-lang-es="Sé parte de Brasa Points y disfrutá beneficios exclusivos."
+            data-lang-en="Be part of Brasa Points and enjoy exclusive benefits.">Sé parte de Brasa Points y disfrutá
+            beneficios exclusivos.</p>
+          <a href="application.html"
+            class="inline-block bg-ember-600 hover:bg-ember-700 text-white text-sm px-5 py-2.5 rounded-lg font-semibold transition-colors"
+            data-lang-es="Registrarse" data-lang-en="Sign Up">Registrarse</a>
+        </div>
+      </div>
+      <div class="border-t border-carbon-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <p class="text-xs text-carbon-500">© 2026 Brasaland. <span data-lang-es="Todos los derechos reservados."
+            data-lang-en="All rights reserved.">Todos los derechos reservados.</span></p>
+        <p class="text-xs text-carbon-600" data-lang-es="Proyecto Brasaland Digital — 4Geeks Academy"
+          data-lang-en="Brasaland Digital Project — 4Geeks Academy">Proyecto Brasaland Digital — 4Geeks Academy</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Language Toggle Script -->
+  <script>
+    let currentLang = 'es';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'es' ? 'en' : 'es';
+      document.documentElement.lang = currentLang;
+      document.getElementById('lang-label').textContent = currentLang === 'es' ? 'EN' : 'ES';
+
+      document.querySelectorAll('[data-lang-es]').forEach(el => {
+        el.textContent = el.getAttribute('data-lang-' + currentLang);
+      });
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.getElementById('mobile-menu-btn');
+      const isHidden = menu.classList.contains('hidden');
+      menu.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+    }
+
+    // Close mobile menu on link click
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.add('hidden');
+        document.getElementById('mobile-menu-btn').setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
+</body>
+
+</html>

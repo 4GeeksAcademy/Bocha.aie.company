@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Registrate en Brasa Points, el programa de fidelización de Brasaland. Sign up for Brasa Points, Brasaland's loyalty program.">
+  <title>Brasaland — Registro Brasa Points | Sign Up</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brasa: { 50:'#FFF7ED',100:'#FFEDD5',200:'#FED7AA',300:'#FDBA74',400:'#FB923C',500:'#F97316',600:'#EA580C',700:'#C2410C',800:'#9A3412',900:'#7C2D12' },
+            ember: { 50:'#FEF2F2',100:'#FEE2E2',200:'#FECACA',300:'#FCA5A5',400:'#F87171',500:'#EF4444',600:'#DC2626',700:'#B91C1C',800:'#991B1B',900:'#7F1D1D' },
+            carbon: { 50:'#FAFAF9',100:'#F5F5F4',200:'#E7E5E4',300:'#D6D3D1',400:'#A8A29E',500:'#78716C',600:'#57534E',700:'#44403C',800:'#292524',900:'#1C1917' },
+            gold: { 400:'#FBBF24',500:'#F59E0B',600:'#D97706' }
+          },
+          fontFamily: {
+            display: ['"Playfair Display"','Georgia','serif'],
+            body: ['"DM Sans"','system-ui','sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Registro Brasa Points",
+    "description": "Formulario de registro para el programa de fidelización Brasa Points de Brasaland.",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Brasaland",
+      "url": "https://www.brasaland.com"
+    }
+  }
+  </script>
+</head>
+
+<body class="bg-carbon-50 font-body text-carbon-800 antialiased min-h-screen flex flex-col">
+
+  <!-- ========== HEADER ========== -->
+  <header class="bg-carbon-900/95 backdrop-blur-sm border-b border-carbon-700/50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20" aria-label="Main navigation">
+      <a href="index.html" class="flex items-center gap-2 shrink-0" aria-label="Brasaland Home">
+        <img src="assets/logo.svg" alt="Brasaland — Cocina a la Brasa" class="h-10 sm:h-12 w-auto">
+      </a>
+      <div class="flex items-center gap-4">
+        <button id="lang-toggle" onclick="toggleLanguage()" class="flex items-center gap-1.5 text-carbon-400 hover:text-gold-400 transition-colors text-xs font-medium border border-carbon-600 rounded-full px-3 py-1.5" aria-label="Cambiar idioma / Switch language">
+          <span id="lang-label">EN</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/></svg>
+        </button>
+        <a href="index.html" class="text-carbon-300 hover:text-gold-400 transition-colors text-sm font-medium" data-lang-es="← Volver al inicio" data-lang-en="← Back to home">← Volver al inicio</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== MAIN ========== -->
+  <main class="flex-1 py-8 sm:py-12 lg:py-16">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+
+      <!-- Page header -->
+      <div class="text-center mb-8 sm:mb-10">
+        <h1 class="font-display text-3xl sm:text-4xl font-bold text-carbon-900 mb-3" data-lang-es="Registrate en Brasa Points" data-lang-en="Sign up for Brasa Points">Registrate en Brasa Points</h1>
+        <p class="text-carbon-500 text-base sm:text-lg" data-lang-es="Completá el formulario y empezá a acumular puntos y beneficios exclusivos en todos nuestros locales." data-lang-en="Fill out the form and start earning points and exclusive benefits at all our locations.">Completá el formulario y empezá a acumular puntos y beneficios exclusivos en todos nuestros locales.</p>
+      </div>
+
+      <!-- ========== FORM ========== -->
+      <div class="bg-white rounded-2xl shadow-lg border border-carbon-200/60 p-6 sm:p-8 lg:p-10">
+
+        <!-- Success message (hidden by default) -->
+        <div id="success-message" class="hidden mb-6 bg-green-50 border border-green-300 rounded-xl p-6 text-center" role="alert">
+          <svg class="w-12 h-12 text-green-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <h2 class="text-green-800 font-bold text-lg mb-1" data-lang-es="¡Registro exitoso!" data-lang-en="Registration successful!">¡Registro exitoso!</h2>
+          <p class="text-green-700 text-sm" data-lang-es="Tu cuenta de Brasa Points ha sido creada. ¡Bienvenido a la familia Brasaland!" data-lang-en="Your Brasa Points account has been created. Welcome to the Brasaland family!">Tu cuenta de Brasa Points ha sido creada. ¡Bienvenido a la familia Brasaland!</p>
+        </div>
+
+        <div id="form-container">
+          <fieldset class="mb-8">
+            <legend class="text-lg font-bold text-carbon-900 mb-1 font-display" data-lang-es="Identificación" data-lang-en="Identification">Identificación</legend>
+            <p class="text-carbon-400 text-sm mb-5" data-lang-es="Información para identificar tu cuenta." data-lang-en="Information to identify your account.">Información para identificar tu cuenta.</p>
+
+            <!-- Document Type -->
+            <div class="mb-5">
+              <label for="document-type" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Tipo de documento *" data-lang-en="Document type *">Tipo de documento *</label>
+              <select id="document-type" name="document_type" required class="w-full rounded-lg border border-carbon-300 bg-white px-4 py-3 text-sm text-carbon-800 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true">
+                <option value="" data-lang-es="Seleccionar..." data-lang-en="Select...">Seleccionar...</option>
+                <option value="cedula" data-lang-es="Cédula de Ciudadanía" data-lang-en="Cédula de Ciudadanía">Cédula de Ciudadanía</option>
+                <option value="pasaporte" data-lang-es="Pasaporte" data-lang-en="Passport">Pasaporte</option>
+                <option value="drivers-license" data-lang-es="Licencia de Conducir" data-lang-en="Driver's License">Licencia de Conducir</option>
+                <option value="otro" data-lang-es="Otro" data-lang-en="Other">Otro</option>
+              </select>
+              <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Seleccioná un tipo de documento." data-lang-en="Please select a document type."></span>
+            </div>
+
+            <!-- Document Number -->
+            <div class="mb-5">
+              <label for="document-number" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Número de documento *" data-lang-en="Document number *">Número de documento *</label>
+              <input type="text" id="document-number" name="document_number" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 text-sm text-carbon-800 placeholder-carbon-400 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true" data-placeholder-es="Ingresá tu número de documento" data-placeholder-en="Enter your document number" placeholder="Ingresá tu número de documento">
+              <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Ingresá tu número de documento." data-lang-en="Please enter your document number."></span>
+            </div>
+          </fieldset>
+
+          <fieldset class="mb-8">
+            <legend class="text-lg font-bold text-carbon-900 mb-1 font-display" data-lang-es="Datos personales" data-lang-en="Personal information">Datos personales</legend>
+            <p class="text-carbon-400 text-sm mb-5" data-lang-es="Tu información de contacto y datos básicos." data-lang-en="Your contact info and basic details.">Tu información de contacto y datos básicos.</p>
+
+            <!-- Name + Last Name row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+              <div>
+                <label for="first-name" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Nombre *" data-lang-en="First name *">Nombre *</label>
+                <input type="text" id="first-name" name="first_name" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 text-sm text-carbon-800 placeholder-carbon-400 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true" data-placeholder-es="Nombre" data-placeholder-en="First name" placeholder="Nombre">
+                <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Ingresá tu nombre." data-lang-en="Please enter your first name."></span>
+              </div>
+              <div>
+                <label for="last-name" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Apellido *" data-lang-en="Last name *">Apellido *</label>
+                <input type="text" id="last-name" name="last_name" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 text-sm text-carbon-800 placeholder-carbon-400 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true" data-placeholder-es="Apellido" data-placeholder-en="Last name" placeholder="Apellido">
+                <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Ingresá tu apellido." data-lang-en="Please enter your last name."></span>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-5">
+              <label for="email" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Correo electrónico *" data-lang-en="Email address *">Correo electrónico *</label>
+              <input type="email" id="email" name="email" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 text-sm text-carbon-800 placeholder-carbon-400 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true" data-placeholder-es="tucorreo@ejemplo.com" data-placeholder-en="youremail@example.com" placeholder="tucorreo@ejemplo.com">
+              <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Ingresá un correo electrónico válido." data-lang-en="Please enter a valid email address."></span>
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-5">
+              <label for="phone" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Teléfono *" data-lang-en="Phone number *">Teléfono *</label>
+              <input type="tel" id="phone" name="phone" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 text-sm text-carbon-800 placeholder-carbon-400 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true" data-placeholder-es="+57 300 123 4567" data-placeholder-en="+1 305 123 4567" placeholder="+57 300 123 4567">
+              <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Ingresá un número de teléfono válido (mínimo 7 dígitos)." data-lang-en="Please enter a valid phone number (minimum 7 digits)."></span>
+            </div>
+
+            <!-- Birthday -->
+            <div class="mb-5">
+              <label for="birthdate" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Fecha de nacimiento *" data-lang-en="Date of birth *">Fecha de nacimiento *</label>
+              <input type="date" id="birthdate" name="birthdate" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 text-sm text-carbon-800 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true">
+              <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Ingresá tu fecha de nacimiento (debés ser mayor de 16 años)." data-lang-en="Please enter your date of birth (you must be at least 16 years old)."></span>
+            </div>
+          </fieldset>
+
+          <fieldset class="mb-8">
+            <legend class="text-lg font-bold text-carbon-900 mb-1 font-display" data-lang-es="Dirección" data-lang-en="Address">Dirección</legend>
+            <p class="text-carbon-400 text-sm mb-5" data-lang-es="¿Dónde te encontramos?" data-lang-en="Where can we find you?">¿Dónde te encontramos?</p>
+
+            <!-- Address -->
+            <div class="mb-5">
+              <label for="address" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Dirección *" data-lang-en="Address *">Dirección *</label>
+              <input type="text" id="address" name="address" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 text-sm text-carbon-800 placeholder-carbon-400 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true" data-placeholder-es="Calle, número, apartamento..." data-placeholder-en="Street, number, apartment..." placeholder="Calle, número, apartamento...">
+              <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Ingresá tu dirección." data-lang-en="Please enter your address."></span>
+            </div>
+
+            <!-- City + Country row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="city" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Ciudad *" data-lang-en="City *">Ciudad *</label>
+                <input type="text" id="city" name="city" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 text-sm text-carbon-800 placeholder-carbon-400 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true" data-placeholder-es="Tu ciudad" data-placeholder-en="Your city" placeholder="Tu ciudad">
+                <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Ingresá tu ciudad." data-lang-en="Please enter your city."></span>
+              </div>
+              <div>
+                <label for="country" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="País *" data-lang-en="Country *">País *</label>
+                <select id="country" name="country" required class="w-full rounded-lg border border-carbon-300 bg-white px-4 py-3 text-sm text-carbon-800 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true">
+                  <option value="" data-lang-es="Seleccionar..." data-lang-en="Select...">Seleccionar...</option>
+                  <option value="CO">Colombia</option>
+                  <option value="US" data-lang-es="Estados Unidos" data-lang-en="United States">Estados Unidos</option>
+                  <option disabled>──────────</option>
+                  <option value="AF">Afganistán</option><option value="AL">Albania</option><option value="DE" data-lang-es="Alemania" data-lang-en="Germany">Alemania</option><option value="AD">Andorra</option><option value="AO">Angola</option><option value="AG">Antigua y Barbuda</option><option value="SA" data-lang-es="Arabia Saudita" data-lang-en="Saudi Arabia">Arabia Saudita</option><option value="DZ">Argelia</option><option value="AR">Argentina</option><option value="AM">Armenia</option><option value="AU">Australia</option><option value="AT">Austria</option><option value="AZ">Azerbaiyán</option><option value="BS">Bahamas</option><option value="BD">Bangladés</option><option value="BB">Barbados</option><option value="BH">Baréin</option><option value="BE" data-lang-es="Bélgica" data-lang-en="Belgium">Bélgica</option><option value="BZ">Belice</option><option value="BJ">Benín</option><option value="BY">Bielorrusia</option><option value="BO">Bolivia</option><option value="BA">Bosnia y Herzegovina</option><option value="BW">Botsuana</option><option value="BR" data-lang-es="Brasil" data-lang-en="Brazil">Brasil</option><option value="BN">Brunéi</option><option value="BG">Bulgaria</option><option value="BF">Burkina Faso</option><option value="BI">Burundi</option><option value="BT">Bután</option><option value="CV">Cabo Verde</option><option value="KH">Camboya</option><option value="CM">Camerún</option><option value="CA">Canadá</option><option value="TD">Chad</option><option value="CL">Chile</option><option value="CN">China</option><option value="CY">Chipre</option><option value="KR" data-lang-es="Corea del Sur" data-lang-en="South Korea">Corea del Sur</option><option value="CR">Costa Rica</option><option value="HR">Croacia</option><option value="CU">Cuba</option><option value="DK">Dinamarca</option><option value="DM">Dominica</option><option value="EC">Ecuador</option><option value="EG">Egipto</option><option value="SV">El Salvador</option><option value="AE" data-lang-es="Emiratos Árabes Unidos" data-lang-en="United Arab Emirates">Emiratos Árabes Unidos</option><option value="SK">Eslovaquia</option><option value="SI">Eslovenia</option><option value="ES" data-lang-es="España" data-lang-en="Spain">España</option><option value="EE">Estonia</option><option value="ET">Etiopía</option><option value="PH">Filipinas</option><option value="FI">Finlandia</option><option value="FR" data-lang-es="Francia" data-lang-en="France">Francia</option><option value="GE">Georgia</option><option value="GH">Ghana</option><option value="GR">Grecia</option><option value="GT">Guatemala</option><option value="GY">Guyana</option><option value="HT">Haití</option><option value="HN">Honduras</option><option value="HU">Hungría</option><option value="IN">India</option><option value="ID">Indonesia</option><option value="IQ">Irak</option><option value="IE">Irlanda</option><option value="IS">Islandia</option><option value="IL">Israel</option><option value="IT" data-lang-es="Italia" data-lang-en="Italy">Italia</option><option value="JM">Jamaica</option><option value="JP" data-lang-es="Japón" data-lang-en="Japan">Japón</option><option value="JO">Jordania</option><option value="KZ">Kazajistán</option><option value="KE">Kenia</option><option value="KW">Kuwait</option><option value="LV">Letonia</option><option value="LB">Líbano</option><option value="LT">Lituania</option><option value="LU">Luxemburgo</option><option value="MK">Macedonia del Norte</option><option value="MY">Malasia</option><option value="MW">Malaui</option><option value="MT">Malta</option><option value="MA">Marruecos</option><option value="MX" data-lang-es="México" data-lang-en="Mexico">México</option><option value="MD">Moldavia</option><option value="MN">Mongolia</option><option value="ME">Montenegro</option><option value="MZ">Mozambique</option><option value="NA">Namibia</option><option value="NP">Nepal</option><option value="NI">Nicaragua</option><option value="NG">Nigeria</option><option value="NO">Noruega</option><option value="NZ" data-lang-es="Nueva Zelanda" data-lang-en="New Zealand">Nueva Zelanda</option><option value="NL" data-lang-es="Países Bajos" data-lang-en="Netherlands">Países Bajos</option><option value="PK">Pakistán</option><option value="PA">Panamá</option><option value="PY">Paraguay</option><option value="PE" data-lang-es="Perú" data-lang-en="Peru">Perú</option><option value="PL">Polonia</option><option value="PT">Portugal</option><option value="GB" data-lang-es="Reino Unido" data-lang-en="United Kingdom">Reino Unido</option><option value="DO" data-lang-es="República Dominicana" data-lang-en="Dominican Republic">República Dominicana</option><option value="RO">Rumanía</option><option value="RU">Rusia</option><option value="RW">Ruanda</option><option value="SN">Senegal</option><option value="RS">Serbia</option><option value="SG">Singapur</option><option value="SY">Siria</option><option value="ZA" data-lang-es="Sudáfrica" data-lang-en="South Africa">Sudáfrica</option><option value="SE">Suecia</option><option value="CH">Suiza</option><option value="TH">Tailandia</option><option value="TZ">Tanzania</option><option value="TT">Trinidad y Tobago</option><option value="TN">Túnez</option><option value="TR" data-lang-es="Turquía" data-lang-en="Turkey">Turquía</option><option value="UA">Ucrania</option><option value="UG">Uganda</option><option value="UY">Uruguay</option><option value="VE">Venezuela</option><option value="VN">Vietnam</option><option value="ZM">Zambia</option><option value="ZW">Zimbabue</option>
+                </select>
+                <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Seleccioná un país." data-lang-en="Please select a country."></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="mb-8">
+            <legend class="text-lg font-bold text-carbon-900 mb-1 font-display" data-lang-es="Seguridad" data-lang-en="Security">Seguridad</legend>
+            <p class="text-carbon-400 text-sm mb-5" data-lang-es="Creá tu contraseña para acceder a tu cuenta." data-lang-en="Create your password to access your account.">Creá tu contraseña para acceder a tu cuenta.</p>
+
+            <!-- Password -->
+            <div class="mb-5">
+              <label for="password" class="block text-sm font-medium text-carbon-700 mb-1.5">
+                <span data-lang-es="Contraseña *" data-lang-en="Password *">Contraseña *</span>
+                <!-- Tooltip -->
+                <span class="relative inline-block ml-1 group">
+                  <svg class="w-4 h-4 inline text-carbon-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="tooltip-text invisible group-hover:visible group-focus-within:visible absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-carbon-800 text-white text-xs rounded-lg p-3 shadow-lg" role="tooltip">
+                    <span data-lang-es="La contraseña debe tener:" data-lang-en="Password must have:">La contraseña debe tener:</span><br>
+                    <span data-lang-es="• Mínimo 8 caracteres" data-lang-en="• At least 8 characters">• Mínimo 8 caracteres</span><br>
+                    <span data-lang-es="• Al menos 1 mayúscula" data-lang-en="• At least 1 uppercase letter">• Al menos 1 mayúscula</span><br>
+                    <span data-lang-es="• Al menos 1 minúscula" data-lang-en="• At least 1 lowercase letter">• Al menos 1 minúscula</span><br>
+                    <span data-lang-es="• Al menos 1 número" data-lang-en="• At least 1 number">• Al menos 1 número</span>
+                  </span>
+                </span>
+              </label>
+              <div class="relative">
+                <input type="password" id="password" name="password" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 pr-12 text-sm text-carbon-800 placeholder-carbon-400 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true" aria-describedby="password-rules" data-placeholder-es="Creá tu contraseña" data-placeholder-en="Create your password" placeholder="Creá tu contraseña">
+                <button type="button" onclick="togglePasswordVisibility('password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-carbon-400 hover:text-carbon-600 transition-colors" aria-label="Mostrar contraseña">
+                  <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+              </div>
+              <!-- Password strength indicators -->
+              <div id="password-rules" class="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                <span id="rule-length" class="text-carbon-400 flex items-center gap-1"><span class="rule-icon">○</span> <span data-lang-es="Mínimo 8 caracteres" data-lang-en="At least 8 characters">Mínimo 8 caracteres</span></span>
+                <span id="rule-upper" class="text-carbon-400 flex items-center gap-1"><span class="rule-icon">○</span> <span data-lang-es="1 mayúscula" data-lang-en="1 uppercase">1 mayúscula</span></span>
+                <span id="rule-lower" class="text-carbon-400 flex items-center gap-1"><span class="rule-icon">○</span> <span data-lang-es="1 minúscula" data-lang-en="1 lowercase">1 minúscula</span></span>
+                <span id="rule-number" class="text-carbon-400 flex items-center gap-1"><span class="rule-icon">○</span> <span data-lang-es="1 número" data-lang-en="1 number">1 número</span></span>
+              </div>
+              <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="La contraseña no cumple con los requisitos." data-lang-en="Password does not meet the requirements."></span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-5">
+              <label for="confirm-password" class="block text-sm font-medium text-carbon-700 mb-1.5" data-lang-es="Confirmar contraseña *" data-lang-en="Confirm password *">Confirmar contraseña *</label>
+              <div class="relative">
+                <input type="password" id="confirm-password" name="confirm_password" required class="w-full rounded-lg border border-carbon-300 px-4 py-3 pr-12 text-sm text-carbon-800 placeholder-carbon-400 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:border-ember-500 transition-colors" aria-required="true" data-placeholder-es="Repetí tu contraseña" data-placeholder-en="Repeat your password" placeholder="Repetí tu contraseña">
+                <button type="button" onclick="togglePasswordVisibility('confirm-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-carbon-400 hover:text-carbon-600 transition-colors" aria-label="Mostrar contraseña">
+                  <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+              </div>
+              <span class="error-message text-ember-600 text-xs mt-1 hidden" role="alert" data-lang-es="Las contraseñas no coinciden." data-lang-en="Passwords do not match."></span>
+            </div>
+          </fieldset>
+
+          <!-- Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <button type="button" id="submit-btn" onclick="handleSubmit()" class="flex-1 bg-ember-600 hover:bg-ember-700 text-white px-6 py-3.5 rounded-lg font-semibold text-base transition-all hover:shadow-lg hover:shadow-ember-600/30 focus:outline-none focus:ring-2 focus:ring-ember-500 focus:ring-offset-2" data-lang-es="Crear mi cuenta" data-lang-en="Create my account">Crear mi cuenta</button>
+            <button type="button" id="reset-btn" onclick="handleReset()" class="sm:w-auto px-6 py-3.5 rounded-lg font-medium text-sm text-carbon-500 border border-carbon-300 hover:bg-carbon-100 transition-colors focus:outline-none focus:ring-2 focus:ring-carbon-300 focus:ring-offset-2" data-lang-es="Limpiar formulario" data-lang-en="Clear form">Limpiar formulario</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-carbon-900 text-carbon-400 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-xs text-carbon-500">© 2026 Brasaland. <span data-lang-es="Todos los derechos reservados." data-lang-en="All rights reserved.">Todos los derechos reservados.</span></p>
+    </div>
+  </footer>
+
+  <!-- Language Toggle Script -->
+  <script>
+    let currentLang = 'es';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'es' ? 'en' : 'es';
+      document.documentElement.lang = currentLang;
+      document.getElementById('lang-label').textContent = currentLang === 'es' ? 'EN' : 'ES';
+
+      document.querySelectorAll('[data-lang-es]').forEach(el => {
+        el.textContent = el.getAttribute('data-lang-' + currentLang);
+      });
+      // Update placeholders
+      document.querySelectorAll('[data-placeholder-es]').forEach(el => {
+        el.placeholder = el.getAttribute('data-placeholder-' + currentLang);
+      });
+      // Update select options
+      document.querySelectorAll('select option[data-lang-es]').forEach(opt => {
+        opt.textContent = opt.getAttribute('data-lang-' + currentLang);
+      });
+    }
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      btn.setAttribute('aria-label', isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    }
+  </script>
+
+  <!-- Validation Script -->
+  <script src="validation.js"></script>
+</body>
+</html>
