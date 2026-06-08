@@ -1,21 +1,37 @@
 //////////////////////////////////////////////
-// Para ejecutar el demo.ts pasos posibles. //
+// Ejecución del demo de TypeScript (Hito 2)//
 //////////////////////////////////////////////
-1-cd /workspaces/Bocha.aie.company
-2-npm init -y
-3-npm install --save-dev typescript tsx
-4-npx tsx scr/demo.ts
 
-** DEspues de ejecutados una vez los 3 primeros pasos solo basta con hacer el 4to.
+Ir a la raíz del proyecto:
+cd Bocha.aie.company
 
-///////////Comandos del Proyecto ///////////////////
+Instalar dependencias (solo la primera vez o cuando cambie package.json):
+npm install
+
+Ejecutar validación de TypeScript:
+npm run typecheck
+
+Ejecutar el demo:
+npm run dev:demo
+
+Ejecutar validación + demo en un solo paso:
+npm run verify
+
+//////////////////////////////////////////////
+//         Scripts del proyecto             //
+//////////////////////////////////////////////
+
 typecheck: tsc --noEmit demo.ts
 dev:demo: tsx demo.ts
 verify: npm run typecheck && npm run dev:demo
 
 
-///////////Para ver el HTML para pruebas ///////////
+//////////////////////////////////////////////
+//      Página HTML de pruebas manuales     //
+//////////////////////////////////////////////
+
 Desde la raíz del repo:
 npx http-server -p 3000 -a 0.0.0.0
+
 Luego abre:
 manual-tests.html
