@@ -1,3 +1,6 @@
+//Para ejecutar esta demo, asegúrate de tener instalado tsx (npm install -g tsx) y luego ejecuta:
+//npx tsx scr/demo.ts
+
 import { Restaurant, Product, Customer, Order, Employee, Supplier } from "./types/models";
 import {
   filterProductsByCategory,
