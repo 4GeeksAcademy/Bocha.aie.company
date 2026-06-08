@@ -1,108 +1,84 @@
-// Brasaland — Interfaces y tipos de entidades principales 260608 1113
+// ============================================================
+// Brasaland — Interfaces y tipos de entidades principales
+// Fuente: CONTEXT-brasaland.es.md (Hito 2)   260608 1547
+// ============================================================
 
-export type Currency = "COP" | "USD";
+// ── Tipos auxiliares ──
+
+export interface Price {
+  USD: number; 
+  COP: number; 
+}
+
+export type MenuCategory = "Meat" | "Side" | "Beverage" | "Dessert" | "Combo";
+export type MenuItemStatus = "Active" | "Seasonal" | "Discontinued";
+export type PaymentMethod = "Cash" | "Credit card" | "Debit card" | "Digital wallet";
 export type Country = "Colombia" | "USA";
-export type OrderStatus = "pending" | "preparing" | "ready" | "delivered" | "cancelled";
-export type EmployeeRole = "chef" | "waiter" | "manager" | "cashier" | "cleaner";
-export type SupplierCategory = "meat" | "vegetables" | "sauces" | "beverages" | "packaging" | "cleaning";
-export type ProductCategory = "main" | "side" | "beverage" | "dessert" | "combo";
+export type LocationStatus = "Active" | "Temporarily closed" | "Under renovation";
+export type WasteReason = "Expired" | "Cooking error" | "Customer return" | "Damage" | "Other";
 
-export interface Restaurant {
-  id: string;
-  name: string;
-  country: Country;
-  city: string;
-  address: string;
-  isOpen: boolean;
-  openingHour: number;
-  closingHour: number;
-  currency: Currency;
+// ── Ítem de Menú ──────────────────────────────────────────────────────────────
+
+export interface MenuItem {
+  id: string;                   
+  name: string;              
+  category: MenuCategory;
+  basePrice: Price;            
+  ingredientCost: Price;        
+  prepTimeMinutes: number;      
+  isAvailableInColombia: boolean;
+  isAvailableInUSA: boolean;
+  allergens: string[];
+  status: MenuItemStatus;
 }
 
-export interface Product {
-  id: string;
-  name: string;
-  category: ProductCategory;
-  priceUSD: number;
-  priceCOP: number;
-  isAvailable: boolean;
-  ingredients: string[];
-}
+// ── Transacción de Venta ──
 
-export interface Customer {
+export interface SaleTransaction {
   id: string;
-  name: string;
-  email: string;
-  phone: string;
-  country: Country;
-  birthdate: string;
-  brasaPoints: number;
-  registeredAt: string;
-}
-
-export interface OrderItem {
-  productId: string;
-  productName: string;
+  locationId: string;
+  itemId: string;
   quantity: number;
-  unitPriceUSD: number;
-  unitPriceCOP: number;
+  totalPrice: Price;
+  paymentMethod: PaymentMethod;
+  timestamp: Date;
+  waiterName: string;
 }
 
-export interface Order {
-  id: string;
-  restaurantId: string;
-  customerId: string;
-  items: OrderItem[];
-  status: OrderStatus;
-  currency: Currency;
-  totalUSD: number;
-  totalCOP: number;
-  createdAt: string;
-}
+// ── Locación ──
 
-export interface Supplier {
+export interface Location {
   id: string;
   name: string;
-  category: SupplierCategory;
+  city: string;
   country: Country;
-  contactEmail: string;
-  priceHistory: PriceRecord[];
-  isActive: boolean;
+  openingYear: number;
+  seatingCapacity: number;
+  staffCount: number;
+  monthlyRentCost: Price;
+  averageMonthlyUtilities: Price;
+  manager: string;
+  status: LocationStatus;
 }
 
-export interface PriceRecord {
-  date: string;
-  priceUSD: number;
-  productName: string;
-}
+// ── Registro de Desperdicio ──
 
-export interface Employee {
+export interface WasteRecord {
   id: string;
-  name: string;
-  email: string;
-  role: EmployeeRole;
-  restaurantId: string;
-  country: Country;
-  hiredAt: string;
-  isActive: boolean;
-  salary: number;
-  salaryCurrency: Currency;
+  locationId: string;
+  itemId: string;
+  quantity: number;
+  reason: WasteReason;
+  cost: Price;
+  timestamp: Date;
+  reportedBy: string;
 }
 
-// Reporte de ventas por restaurante
-export interface SalesReport {
-  restaurantId: string;
-  restaurantName: string;
-  country: Country;
-  totalOrders: number;
-  totalRevenueUSD: number;
-  totalRevenueCOP: number;
-  averageTicketUSD: number;
-}
+// ── Métricas por País ──
 
-// Resultado de búsqueda binaria
-export interface SearchResult<T> {
-  found: boolean;
-  index: number;
-  item: T | null;
+export interface CountryMetrics {
+  totalLocations: number;
+  totalRevenue: Price;
+  averageRevenuePerLocation: Price;
+  totalSales: number;
 }

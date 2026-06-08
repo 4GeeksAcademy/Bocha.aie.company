@@ -1,85 +1,66 @@
-import { SearchResult } from "../types/models";
+import { Location, MenuItem } from "../types/models";
 
-// Búsqueda lineal por ID en cualquier array con propiedad id
-export function linearSearchById<T extends { id: string }>(
-  items: T[],
+// ============================================================
+// Brasaland — Operaciones de Búsqueda
+// Búsqueda lineal para arrays desordenados
+// Búsqueda binaria para arrays ordenados
+// ============================================================
+
+/**
+ * Búsqueda LINEAL: encuentra una locación por ID.
+ * Retorna la locación si se encuentra, null en caso contrario.
+ */
+export function findLocationById(
+  locations: Location[],
   id: string
-): SearchResult<T> {
-  for (let i = 0; i < items.length; i++) {
-    if (items[i].id === id) {
-      return { found: true, index: i, item: items[i] };
-    }
+): Location | null {
+  for (const location of locations) {
+    if (location.id === id) return location;
   }
-  return { found: false, index: -1, item: null };
+  return null;
 }
 
-// Búsqueda lineal por campo de texto (nombre, email, etc.)
-export function linearSearchByField<T>(
-  items: T[],
-  field: keyof T,
-  value: string
-): SearchResult<T> {
-  const lowerValue = value.toLowerCase();
-  for (let i = 0; i < items.length; i++) {
-    const fieldValue = String(items[i][field]).toLowerCase();
-    if (fieldValue.includes(lowerValue)) {
-      return { found: true, index: i, item: items[i] };
-    }
+/**
+ * Búsqueda LINEAL: encuentra un ítem de menú por nombre (case-insensitive).
+ * Retorna el ítem si se encuentra, null en caso contrario.
+ */
+export function findMenuItemByName(
+  items: MenuItem[],
+  name: string
+): MenuItem | null {
+  const lowerName = name.toLowerCase();
+  for (const item of items) {
+    if (item.name.toLowerCase() === lowerName) return item;
   }
-  return { found: false, index: -1, item: null };
+  return null;
 }
 
-// Búsqueda binaria por ID en array ORDENADO por id
-export function binarySearchById<T extends { id: string }>(
-  sortedItems: T[],
-  id: string
-): SearchResult<T> {
-  if (sortedItems.length === 0) return { found: false, index: -1, item: null };
+/**
+ * Búsqueda BINARIA: busca por seatingCapacity en un array ya ordenado (asc).
+ * Retorna el índice si se encuentra, -1 en caso contrario.
+ *
+ * PRECONDICIÓN: sortedLocations debe estar ordenado por seatingCapacity ascendente.
+ */
+export function binarySearchLocationByCapacity(
+  sortedLocations: Location[],
+  targetCapacity: number
+): number {
+  if (sortedLocations.length === 0) return -1;
 
   let left = 0;
-  let right = sortedItems.length - 1;
+  let right = sortedLocations.length - 1;
 
   while (left <= right) {
     const mid = Math.floor((left + right) / 2);
-    const midId = sortedItems[mid].id;
+    const midCapacity = sortedLocations[mid].seatingCapacity;
 
-    if (midId === id) {
-      return { found: true, index: mid, item: sortedItems[mid] };
-    }
-    if (midId < id) {
+    if (midCapacity === targetCapacity) return mid;
+    if (midCapacity < targetCapacity) {
       left = mid + 1;
     } else {
       right = mid - 1;
     }
   }
 
-  return { found: false, index: -1, item: null };
-}
-
-// Búsqueda binaria numérica en array ORDENADO por un campo numérico
-export function binarySearchByNumericField<T>(
-  sortedItems: T[],
-  field: keyof T,
-  value: number
-): SearchResult<T> {
-  if (sortedItems.length === 0) return { found: false, index: -1, item: null };
-
-  let left = 0;
-  let right = sortedItems.length - 1;
-
-  while (left <= right) {
-    const mid = Math.floor((left + right) / 2);
-    const midValue = Number(sortedItems[mid][field]);
-
-    if (midValue === value) {
-      return { found: true, index: mid, item: sortedItems[mid] };
-    }
-    if (midValue < value) {
-      left = mid + 1;
-    } else {
-      right = mid - 1;
-    }
-  }
-
-  return { found: false, index: -1, item: null };
+  return -1;
 }

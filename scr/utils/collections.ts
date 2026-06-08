@@ -1,93 +1,80 @@
-import { Product, Customer, Order, Employee, Supplier } from "../types/models";
+import { SaleTransaction, MenuItem, Location, MenuCategory } from "../types/models";
 
-// Filtra un array de productos por categoría
-export function filterProductsByCategory(products: Product[], category: string): Product[] {
-  return products.filter((p) => p.category === category);
+// ============================================================
+// Brasaland — Operaciones de Colecciones
+// Todas las funciones son puras y no mutan los arrays originales
+// ============================================================
+
+/**
+ * Retorna todas las ventas de la locación especificada.
+ */
+export function filterSalesByLocation(
+  sales: SaleTransaction[],
+  locationId: string
+): SaleTransaction[] {
+  return sales.filter((sale) => sale.locationId === locationId);
 }
 
-// Filtra productos disponibles dentro de un rango de precio en USD
-export function filterProductsByPriceRange(
-  products: Product[],
-  minUSD: number,
-  maxUSD: number
-): Product[] {
-  return products.filter((p) => p.priceUSD >= minUSD && p.priceUSD <= maxUSD);
+/**
+ * Retorna ventas que ocurrieron entre startDate y endDate (inclusive).
+ */
+export function filterSalesByDateRange(
+  sales: SaleTransaction[],
+  startDate: Date,
+  endDate: Date
+): SaleTransaction[] {
+  const start = startDate.getTime();
+  const end = endDate.getTime();
+  return sales.filter((sale) => {
+    const t = sale.timestamp.getTime();
+    return t >= start && t <= end;
+  });
 }
 
-// Filtra productos por disponibilidad
-export function filterAvailableProducts(products: Product[]): Product[] {
-  return products.filter((p) => p.isAvailable);
+/**
+ * Retorna ítems de menú en la categoría especificada.
+ */
+export function filterMenuItemsByCategory(
+  items: MenuItem[],
+  category: MenuCategory
+): MenuItem[] {
+  return items.filter((item) => item.category === category);
 }
 
-// Filtra clientes por país
-export function filterCustomersByCountry(customers: Customer[], country: string): Customer[] {
-  return customers.filter((c) => c.country === country);
+/**
+ * Retorna locaciones con estado "Active".
+ */
+export function filterActiveLocations(locations: Location[]): Location[] {
+  return locations.filter((loc) => loc.status === "Active");
 }
 
-// Filtra órdenes por estado
-export function filterOrdersByStatus(orders: Order[], status: string): Order[] {
-  return orders.filter((o) => o.status === status);
-}
-
-// Filtra órdenes por restaurante
-export function filterOrdersByRestaurant(orders: Order[], restaurantId: string): Order[] {
-  return orders.filter((o) => o.restaurantId === restaurantId);
-}
-
-// Filtra empleados activos por restaurante
-export function filterEmployeesByRestaurant(employees: Employee[], restaurantId: string): Employee[] {
-  return employees.filter((e) => e.restaurantId === restaurantId && e.isActive);
-}
-
-// Filtra proveedores activos por categoría
-export function filterSuppliersByCategory(suppliers: Supplier[], category: string): Supplier[] {
-  return suppliers.filter((s) => s.category === category && s.isActive);
-}
-
-// Ordena productos por precio USD ascendente o descendente
-export function sortProductsByPrice(products: Product[], ascending: boolean = true): Product[] {
-  return [...products].sort((a, b) =>
-    ascending ? a.priceUSD - b.priceUSD : b.priceUSD - a.priceUSD
+/**
+ * Retorna locaciones ordenadas por capacidad de asientos.
+ * No muta el array original.
+ */
+export function sortLocationsByCapacity(
+  locations: Location[],
+  order: "asc" | "desc"
+): Location[] {
+  return [...locations].sort((a, b) =>
+    order === "asc"
+      ? a.seatingCapacity - b.seatingCapacity
+      : b.seatingCapacity - a.seatingCapacity
   );
 }
 
-// Ordena clientes por brasaPoints
-export function sortCustomersByPoints(customers: Customer[], ascending: boolean = false): Customer[] {
-  return [...customers].sort((a, b) =>
-    ascending ? a.brasaPoints - b.brasaPoints : b.brasaPoints - a.brasaPoints
+/**
+ * Retorna ítems de menú ordenados por precio en la moneda especificada.
+ * No muta el array original.
+ */
+export function sortMenuItemsByPrice(
+  items: MenuItem[],
+  currency: "USD" | "COP",
+  order: "asc" | "desc"
+): MenuItem[] {
+  return [...items].sort((a, b) =>
+    order === "asc"
+      ? a.basePrice[currency] - b.basePrice[currency]
+      : b.basePrice[currency] - a.basePrice[currency]
   );
-}
-
-// Ordena órdenes por fecha de creación
-export function sortOrdersByDate(orders: Order[], ascending: boolean = true): Order[] {
-  return [...orders].sort((a, b) =>
-    ascending
-      ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-}
-
-// Ordena órdenes por total en USD
-export function sortOrdersByTotal(orders: Order[], ascending: boolean = false): Order[] {
-  return [...orders].sort((a, b) =>
-    ascending ? a.totalUSD - b.totalUSD : b.totalUSD - a.totalUSD
-  );
-}
-
-// Agrupa órdenes por restaurantId
-export function groupOrdersByRestaurant(orders: Order[]): Record<string, Order[]> {
-  return orders.reduce<Record<string, Order[]>>((acc, order) => {
-    if (!acc[order.restaurantId]) acc[order.restaurantId] = [];
-    acc[order.restaurantId].push(order);
-    return acc;
-  }, {});
-}
-
-// Agrupa empleados por rol
-export function groupEmployeesByRole(employees: Employee[]): Record<string, Employee[]> {
-  return employees.reduce<Record<string, Employee[]>>((acc, emp) => {
-    if (!acc[emp.role]) acc[emp.role] = [];
-    acc[emp.role].push(emp);
-    return acc;
-  }, {});
 }
