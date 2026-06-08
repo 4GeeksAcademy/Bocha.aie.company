@@ -7,7 +7,10 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit scr/demo.ts",
+    "dev:demo": "tsx scr/demo.ts",
+    "verify": "npm run typecheck && npm run dev:demo"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brasaland Lab - Pruebas Manuales</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brasa: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              200: '#FED7AA',
+              300: '#FDBA74',
+              400: '#FB923C',
+              500: '#F97316',
+              600: '#EA580C',
+              700: '#C2410C',
+              800: '#9A3412',
+              900: '#7C2D12'
+            },
+            ember: {
+              500: '#EF4444',
+              600: '#DC2626',
+              700: '#B91C1C'
+            },
+            carbon: {
+              50: '#FAFAF9',
+              100: '#F5F5F4',
+              200: '#E7E5E4',
+              300: '#D6D3D1',
+              400: '#A8A29E',
+              500: '#78716C',
+              600: '#57534E',
+              700: '#44403C',
+              800: '#292524',
+              900: '#1C1917'
+            },
+            gold: {
+              400: '#FBBF24',
+              500: '#F59E0B'
+            }
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            body: ['"DM Sans"', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            ember: '0 10px 35px -12px rgba(220, 38, 38, 0.45)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-carbon-50 text-carbon-800 font-body">
+  <div class="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_15%_20%,rgba(251,146,60,0.22),transparent_36%),radial-gradient(circle_at_85%_15%,rgba(239,68,68,0.16),transparent_30%),linear-gradient(160deg,#fafaf9,#fff7ed_50%,#fff)"]"></div>
+
+  <header class="border-b border-carbon-200/80 bg-white/70 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+      <div>
+        <p class="text-xs tracking-[0.26em] uppercase text-ember-600 font-semibold">Brasaland QA Lab</p>
+        <h1 class="font-display text-2xl sm:text-3xl text-carbon-900">Pruebas manuales de funciones</h1>
+      </div>
+      <a href="index.html" class="inline-flex items-center rounded-lg bg-carbon-900 hover:bg-carbon-800 text-white px-4 py-2 text-sm font-semibold transition-colors">Volver a la landing</a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <section class="xl:col-span-1 space-y-4">
+      <article class="rounded-2xl border border-carbon-200 bg-white/90 shadow-sm p-5">
+        <h2 class="font-display text-xl text-carbon-900">Filtrar</h2>
+        <p class="text-sm text-carbon-600 mt-1 mb-4">Ventas por locación y rango de fechas.</p>
+        <div class="space-y-3">
+          <label class="block text-sm font-medium">Locación
+            <select id="filter-location" class="mt-1 w-full rounded-lg border border-carbon-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ember-500">
+              <option value="">Selecciona una locación</option>
+            </select>
+          </label>
+          <label class="block text-sm font-medium">Fecha inicio
+            <input id="filter-start" type="date" class="mt-1 w-full rounded-lg border border-carbon-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ember-500">
+          </label>
+          <label class="block text-sm font-medium">Fecha fin
+            <input id="filter-end" type="date" class="mt-1 w-full rounded-lg border border-carbon-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ember-500">
+          </label>
+          <button id="run-filter" class="w-full rounded-lg bg-ember-600 hover:bg-ember-700 text-white px-4 py-2.5 font-semibold shadow-ember transition-colors">Ejecutar filtro</button>
+        </div>
+      </article>
+
+      <article class="rounded-2xl border border-carbon-200 bg-white/90 shadow-sm p-5">
+        <h2 class="font-display text-xl text-carbon-900">Buscar</h2>
+        <p class="text-sm text-carbon-600 mt-1 mb-4">Búsqueda lineal por nombre o ID.</p>
+        <div class="space-y-3">
+          <label class="block text-sm font-medium">Ítem de menú por nombre
+            <input id="search-item-name" type="text" placeholder="Ej: Coca-Cola" class="mt-1 w-full rounded-lg border border-carbon-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ember-500">
+          </label>
+          <button id="run-search-item" class="w-full rounded-lg bg-carbon-800 hover:bg-carbon-700 text-white px-4 py-2 font-semibold transition-colors">Buscar ítem</button>
+          <label class="block text-sm font-medium">Locación por ID
+            <input id="search-location-id" type="text" placeholder="Ej: LOC-MIAMI-01" class="mt-1 w-full rounded-lg border border-carbon-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ember-500">
+          </label>
+          <button id="run-search-location" class="w-full rounded-lg bg-carbon-800 hover:bg-carbon-700 text-white px-4 py-2 font-semibold transition-colors">Buscar locación</button>
+        </div>
+      </article>
+
+      <article class="rounded-2xl border border-carbon-200 bg-white/90 shadow-sm p-5">
+        <h2 class="font-display text-xl text-carbon-900">Ordenar</h2>
+        <p class="text-sm text-carbon-600 mt-1 mb-4">Ordena menú o locaciones.</p>
+        <div class="space-y-3">
+          <label class="block text-sm font-medium">Colección
+            <select id="sort-target" class="mt-1 w-full rounded-lg border border-carbon-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ember-500">
+              <option value="menu">Menú por precio</option>
+              <option value="locations">Locaciones por capacidad</option>
+            </select>
+          </label>
+          <label class="block text-sm font-medium">Orden
+            <select id="sort-order" class="mt-1 w-full rounded-lg border border-carbon-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ember-500">
+              <option value="asc">Ascendente</option>
+              <option value="desc">Descendente</option>
+            </select>
+          </label>
+          <label class="block text-sm font-medium">Moneda (solo menú)
+            <select id="sort-currency" class="mt-1 w-full rounded-lg border border-carbon-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ember-500">
+              <option value="USD">USD</option>
+              <option value="COP">COP</option>
+            </select>
+          </label>
+          <button id="run-sort" class="w-full rounded-lg bg-gold-500 hover:bg-gold-400 text-carbon-900 px-4 py-2 font-semibold transition-colors">Ejecutar orden</button>
+        </div>
+      </article>
+
+      <article class="rounded-2xl border border-carbon-200 bg-white/90 shadow-sm p-5">
+        <h2 class="font-display text-xl text-carbon-900">Reportes</h2>
+        <p class="text-sm text-carbon-600 mt-1 mb-4">Métricas agregadas de ventas.</p>
+        <div class="grid grid-cols-2 gap-2">
+          <button id="run-report-payments" class="rounded-lg border border-carbon-300 hover:border-ember-600 hover:text-ember-700 px-3 py-2 text-sm font-semibold transition-colors">Pago</button>
+          <button id="run-report-ticket" class="rounded-lg border border-carbon-300 hover:border-ember-600 hover:text-ember-700 px-3 py-2 text-sm font-semibold transition-colors">Ticket</button>
+          <button id="run-report-top" class="rounded-lg border border-carbon-300 hover:border-ember-600 hover:text-ember-700 px-3 py-2 text-sm font-semibold transition-colors">Top ventas</button>
+          <button id="run-report-country" class="rounded-lg border border-carbon-300 hover:border-ember-600 hover:text-ember-700 px-3 py-2 text-sm font-semibold transition-colors">Comparativa</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="xl:col-span-2 rounded-2xl border border-carbon-200 bg-white/95 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-carbon-200 bg-carbon-50/70">
+        <h2 id="result-title" class="font-display text-2xl text-carbon-900">Resultados</h2>
+        <p id="result-subtitle" class="text-sm text-carbon-600 mt-1">Ejecuta una operación para ver la salida.</p>
+      </div>
+
+      <div class="p-5">
+        <div id="result-empty" class="rounded-xl border border-dashed border-carbon-300 bg-carbon-50 p-6 text-carbon-600">
+          Usa los controles para probar las funciones manualmente.
+        </div>
+        <div id="result-table-wrapper" class="hidden overflow-auto rounded-xl border border-carbon-200"></div>
+        <pre id="result-json" class="hidden mt-4 rounded-xl bg-carbon-900 text-carbon-100 text-xs sm:text-sm p-4 overflow-auto max-h-[420px]"></pre>
+      </div>
+    </section>
+  </main>
+
+  <script src="manual-tests.js"></script>
+</body>
+</html>
