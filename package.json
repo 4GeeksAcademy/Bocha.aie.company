@@ -1,0 +1,31 @@
+{
+  "name": "bocha.aie.company",
+  "version": "1.0.0",
+  "description": "[![4Geeks Academy](https://img.shields.io/badge/4Geeks-Academy-blue)](https://4geeksacademy.com) [![AI Engineering](https://img.shields.io/badge/track-AI%20Engineering-green)](https://4geeksacademy.com/es/programas-de-carrera/ingenieria-ia)",
+  "main": "validation.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit scr/demo.ts",
+    "dev:demo": "tsx scr/demo.ts",
+    "verify": "npm run typecheck && npm run dev:demo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4GeeksAcademy/Bocha.aie.company.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/4GeeksAcademy/Bocha.aie.company/issues"
+  },
+  "homepage": "https://github.com/4GeeksAcademy/Bocha.aie.company#readme",
+  "devDependencies": {
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
