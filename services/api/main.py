@@ -14,6 +14,7 @@ from packages.incidents_analysis import (
     analyze_csv_text,
     summary_to_csv,
 )
+from services.api.routes import suppliers_router
 
 
 app = FastAPI(
@@ -22,6 +23,9 @@ app = FastAPI(
     ),
     version="1.0.0",
 )
+
+
+app.include_router(suppliers_router)
 
 
 LAST_ANALYSIS = None

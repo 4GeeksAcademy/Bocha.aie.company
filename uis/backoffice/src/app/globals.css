@@ -187,6 +187,15 @@ button {
 }
 
 
+.secondaryButton {
+  margin-left:
+    10px;
+
+  background:
+    #525d69;
+}
+
+
 button:disabled {
   opacity:
     0.55;
@@ -445,6 +454,244 @@ button:disabled {
 }
 
 
+.supplierForm {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(220px, 1fr)
+    );
+
+  gap:
+    16px;
+}
+
+
+.supplierForm label,
+.supplierFilters label {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    8px;
+
+  font-weight:
+    700;
+}
+
+
+.supplierForm input,
+.supplierForm select,
+.supplierFilters input,
+.supplierFilters select,
+.inlineActions input,
+.inlineActions select {
+  border:
+    1px solid #ced4da;
+
+  border-radius:
+    8px;
+
+  padding:
+    10px;
+
+  background:
+    white;
+}
+
+
+.categoriesSelector {
+  grid-column:
+    1 / -1;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    10px;
+}
+
+
+.categoriesSelector span {
+  font-weight:
+    700;
+}
+
+
+.categoryChips {
+  display:
+    flex;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    10px;
+}
+
+
+.chip {
+  background:
+    #eef1f4;
+
+  color:
+    #25303b;
+
+  border:
+    1px solid #d6dde5;
+
+  border-radius:
+    999px;
+
+  padding:
+    8px 12px;
+
+  font-size:
+    13px;
+
+  font-weight:
+    700;
+}
+
+
+.chipSelected {
+  background:
+    #25303b;
+
+  color:
+    white;
+
+  border-color:
+    #25303b;
+}
+
+
+.supplierFilters {
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr 1fr auto;
+
+  gap:
+    14px;
+
+  align-items:
+    end;
+}
+
+
+.tableWrapper {
+  width:
+    100%;
+
+  overflow-x:
+    auto;
+}
+
+
+.suppliersTable {
+  width:
+    100%;
+
+  border-collapse:
+    collapse;
+}
+
+
+.suppliersTable th,
+.suppliersTable td {
+  text-align:
+    left;
+
+  border-bottom:
+    1px solid #edf0f2;
+
+  padding:
+    12px 10px;
+
+  vertical-align:
+    top;
+}
+
+
+.suppliersTable th {
+  font-size:
+    13px;
+
+  color:
+    #57606a;
+}
+
+
+.inlineActions {
+  display:
+    flex;
+
+  gap:
+    8px;
+
+  align-items:
+    center;
+}
+
+
+.inlineActions input {
+  width:
+    88px;
+}
+
+
+.badge {
+  display:
+    inline-block;
+
+  font-weight:
+    700;
+
+  border-radius:
+    999px;
+
+  padding:
+    6px 11px;
+
+  font-size:
+    12px;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.4px;
+}
+
+
+.badgeActive {
+  background:
+    #e8f8ee;
+
+  color:
+    #0f6f3d;
+}
+
+
+.badgeSuspended {
+  background:
+    #fff2e2;
+
+  color:
+    #965b00;
+}
+
+
 @media (
   max-width: 750px
 ) {
@@ -464,6 +711,22 @@ button:disabled {
   .satisfactionGrid {
     grid-template-columns:
       1fr;
+  }
+
+
+  .supplierForm,
+  .supplierFilters {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .secondaryButton {
+    margin-left:
+      0;
+
+    margin-top:
+      10px;
   }
 
 
