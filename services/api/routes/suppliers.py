@@ -9,6 +9,7 @@ from services.api.database import get_suppliers_table
 from services.api.models import (
     Supplier,
     SupplierCategory,
+    SupplierCountry,
     SupplierCreate,
     SupplierRateUpdate,
     SupplierStatusUpdate,
@@ -56,22 +57,22 @@ def create_supplier(payload: SupplierCreate) -> Supplier:
 
 @router.get("", response_model=list[Supplier])
 def list_suppliers(
-    country: str | None = Query(default=None),
+    country: SupplierCountry | None = Query(default=None),
     category: SupplierCategory | None = Query(default=None),
 ) -> list[Supplier]:
     table = get_suppliers_table()
     documents = table.all()
 
-    normalized_country = country.lower().strip() if country else None
+    country_value = country.value if country else None
     category_value = category.value if category else None
 
     filtered: list[Document] = []
 
     for document in documents:
-        if normalized_country and document.get("country", "").lower().strip() != normalized_country:
+        if country_value and document.get("country") != country_value:
             continue
 
-        categories = document.get("product_categories", [])
+        categories = document.get("categories", [])
 
         if category_value and category_value not in categories:
             continue
@@ -94,7 +95,7 @@ def update_supplier_rate(supplier_id: int, payload: SupplierRateUpdate) -> Suppl
 
     table.update(
         {
-            "rate": payload.rate,
+            "rate_per_unit": payload.rate_per_unit,
             "updated_at": _now_iso(),
         },
         doc_ids=[supplier_id],
