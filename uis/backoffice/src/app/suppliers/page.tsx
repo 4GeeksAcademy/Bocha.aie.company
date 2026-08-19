@@ -1,53 +1,100 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
-type SupplierStatus = "activo" | "suspendido";
+type SupplierStatus = "active" | "suspended";
+type SupplierCountry = "Colombia" | "USA";
+type SupplierCurrency = "COP" | "USD";
 
 type SupplierCategory =
   | "carne"
-  | "vegetales"
-  | "salsas"
+  | "verduras_y_hortalizas"
+  | "salsas_y_condimentos"
   | "bebidas"
   | "packaging"
-  | "limpieza";
+  | "productos_limpieza"
+  | "lacteos"
+  | "carbon_y_combustible";
 
 type Supplier = {
   id: number;
   name: string;
-  country: string;
-  product_categories: SupplierCategory[];
-  rate: number;
+  country: SupplierCountry;
+  categories: SupplierCategory[];
+  rate_per_unit: number;
+  currency: SupplierCurrency;
   updated_at: string;
   status: SupplierStatus;
+  contact_email?: string | null;
+  notes?: string | null;
 };
 
 type SupplierFormState = {
   name: string;
-  country: string;
-  product_categories: SupplierCategory[];
-  rate: string;
+  country: SupplierCountry;
+  categories: SupplierCategory[];
+  rate_per_unit: string;
+  currency: SupplierCurrency;
   status: SupplierStatus;
+  contact_email: string;
+  notes: string;
 };
 
 const CATEGORY_OPTIONS: SupplierCategory[] = [
   "carne",
-  "vegetales",
-  "salsas",
+  "verduras_y_hortalizas",
+  "salsas_y_condimentos",
   "bebidas",
   "packaging",
-  "limpieza",
+  "productos_limpieza",
+  "lacteos",
+  "carbon_y_combustible",
 ];
 
-const STATUS_OPTIONS: SupplierStatus[] = ["activo", "suspendido"];
+const STATUS_OPTIONS: SupplierStatus[] = ["active", "suspended"];
+const COUNTRY_OPTIONS: SupplierCountry[] = ["Colombia", "USA"];
+
+function currencyForCountry(country: SupplierCountry): SupplierCurrency {
+  return country === "Colombia" ? "COP" : "USD";
+}
 
 const initialForm: SupplierFormState = {
   name: "",
-  country: "",
-  product_categories: [],
-  rate: "",
-  status: "activo",
+  country: "Colombia",
+  categories: [],
+  rate_per_unit: "",
+  currency: "COP",
+  status: "active",
+  contact_email: "",
+  notes: "",
 };
+
+function readErrorMessage(payload: unknown, fallback: string): string {
+  if (!payload || typeof payload !== "object") {
+    return fallback;
+  }
+
+  const data = payload as { detail?: unknown };
+
+  if (typeof data.detail === "string") {
+    return data.detail;
+  }
+
+  if (Array.isArray(data.detail)) {
+    return data.detail
+      .map((item) => {
+        if (item && typeof item === "object" && "msg" in item) {
+          const message = (item as { msg?: unknown }).msg;
+          return typeof message === "string" ? message : null;
+        }
+        return null;
+      })
+      .filter((message): message is string => Boolean(message))
+      .join(" | ");
+  }
+
+  return fallback;
+}
 
 export default function SuppliersPage() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -60,18 +107,7 @@ export default function SuppliersPage() {
   const [formState, setFormState] = useState<SupplierFormState>(initialForm);
   const [rateDrafts, setRateDrafts] = useState<Record<number, string>>({});
 
-  const countries = useMemo(() => {
-    const unique = new Set<string>();
-    suppliers.forEach((supplier) => unique.add(supplier.country));
-    return Array.from(unique).sort((a, b) => a.localeCompare(b));
-  }, [suppliers]);
-
-  async function fetchSuppliers(
-    filters: {
-      country: string;
-      category: "" | SupplierCategory;
-    }
-  ): Promise<Supplier[]> {
+  async function fetchSuppliers(filters: { country: string; category: "" | SupplierCategory }): Promise<Supplier[]> {
     const params = new URLSearchParams();
 
     if (filters.country.trim()) {
@@ -86,10 +122,10 @@ export default function SuppliersPage() {
     const url = query ? `/backend/suppliers?${query}` : "/backend/suppliers";
 
     const response = await fetch(url);
-    const data = (await response.json().catch(() => null)) as Supplier[] | { detail?: string } | null;
+    const data = (await response.json().catch(() => null)) as unknown;
 
     if (!response.ok) {
-      throw new Error((data as { detail?: string } | null)?.detail ?? "No se pudo cargar el directorio de proveedores.");
+      throw new Error(readErrorMessage(data, "No se pudo cargar el directorio de proveedores."));
     }
 
     return (data as Supplier[]) ?? [];
@@ -108,7 +144,7 @@ export default function SuppliersPage() {
 
       const nextDrafts: Record<number, string> = {};
       loaded.forEach((supplier) => {
-        nextDrafts[supplier.id] = supplier.rate.toString();
+        nextDrafts[supplier.id] = supplier.rate_per_unit.toString();
       });
       setRateDrafts(nextDrafts);
     } catch (requestError) {
@@ -139,7 +175,7 @@ export default function SuppliersPage() {
 
         const nextDrafts: Record<number, string> = {};
         loaded.forEach((supplier) => {
-          nextDrafts[supplier.id] = supplier.rate.toString();
+          nextDrafts[supplier.id] = supplier.rate_per_unit.toString();
         });
         setRateDrafts(nextDrafts);
       } catch (requestError) {
@@ -168,12 +204,12 @@ export default function SuppliersPage() {
 
   function toggleCategory(category: SupplierCategory) {
     setFormState((previous) => {
-      const alreadySelected = previous.product_categories.includes(category);
+      const alreadySelected = previous.categories.includes(category);
       return {
         ...previous,
-        product_categories: alreadySelected
-          ? previous.product_categories.filter((item) => item !== category)
-          : [...previous.product_categories, category],
+        categories: alreadySelected
+          ? previous.categories.filter((item) => item !== category)
+          : [...previous.categories, category],
       };
     });
   }
@@ -182,17 +218,17 @@ export default function SuppliersPage() {
     event.preventDefault();
     setFormError("");
 
-    if (!formState.name.trim() || !formState.country.trim() || !formState.rate.trim()) {
-      setFormError("Completá nombre, país y tarifa.");
+    if (!formState.name.trim() || !formState.rate_per_unit.trim()) {
+      setFormError("Completá nombre y tarifa.");
       return;
     }
 
-    if (formState.product_categories.length === 0) {
+    if (formState.categories.length === 0) {
       setFormError("Seleccioná al menos una categoría.");
       return;
     }
 
-    const parsedRate = Number(formState.rate);
+    const parsedRate = Number(formState.rate_per_unit);
 
     if (!Number.isFinite(parsedRate) || parsedRate <= 0) {
       setFormError("La tarifa debe ser un número mayor que cero.");
@@ -209,17 +245,20 @@ export default function SuppliersPage() {
         },
         body: JSON.stringify({
           name: formState.name.trim(),
-          country: formState.country.trim(),
-          product_categories: formState.product_categories,
-          rate: parsedRate,
+          country: formState.country,
+          categories: formState.categories,
+          rate_per_unit: parsedRate,
+          currency: formState.currency,
           status: formState.status,
+          contact_email: formState.contact_email.trim() || null,
+          notes: formState.notes.trim() || null,
         }),
       });
 
-      const data = (await response.json().catch(() => null)) as Supplier | { detail?: string } | null;
+      const data = (await response.json().catch(() => null)) as unknown;
 
       if (!response.ok) {
-        throw new Error((data as { detail?: string } | null)?.detail ?? "No se pudo crear el proveedor.");
+        throw new Error(readErrorMessage(data, "No se pudo crear el proveedor."));
       }
 
       setFormState(initialForm);
@@ -253,19 +292,19 @@ export default function SuppliersPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          rate: parsed,
+          rate_per_unit: parsed,
         }),
       });
 
-      const data = (await response.json().catch(() => null)) as Supplier | { detail?: string } | null;
+      const data = (await response.json().catch(() => null)) as unknown;
 
       if (!response.ok) {
-        throw new Error((data as { detail?: string } | null)?.detail ?? "No se pudo actualizar la tarifa.");
+        throw new Error(readErrorMessage(data, "No se pudo actualizar la tarifa."));
       }
 
       const updated = data as Supplier;
       setSuppliers((previous) => previous.map((supplier) => (supplier.id === supplierId ? updated : supplier)));
-      setRateDrafts((previous) => ({ ...previous, [supplierId]: updated.rate.toString() }));
+      setRateDrafts((previous) => ({ ...previous, [supplierId]: updated.rate_per_unit.toString() }));
     } catch (requestError) {
       if (requestError instanceof Error) {
         setError(requestError.message);
@@ -287,10 +326,10 @@ export default function SuppliersPage() {
         body: JSON.stringify({ status }),
       });
 
-      const data = (await response.json().catch(() => null)) as Supplier | { detail?: string } | null;
+      const data = (await response.json().catch(() => null)) as unknown;
 
       if (!response.ok) {
-        throw new Error((data as { detail?: string } | null)?.detail ?? "No se pudo actualizar el estado.");
+        throw new Error(readErrorMessage(data, "No se pudo actualizar el estado."));
       }
 
       const updated = data as Supplier;
@@ -328,24 +367,40 @@ export default function SuppliersPage() {
 
           <label>
             País
-            <input
-              type="text"
+            <select
               value={formState.country}
-              onChange={(event) => setFormState((previous) => ({ ...previous, country: event.target.value }))}
+              onChange={(event) => {
+                const country = event.target.value as SupplierCountry;
+                setFormState((previous) => ({
+                  ...previous,
+                  country,
+                  currency: currencyForCountry(country),
+                }));
+              }}
+            >
+              {COUNTRY_OPTIONS.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            Tarifa por unidad
+            <input
+              type="number"
+              step="0.01"
+              min="0.01"
+              value={formState.rate_per_unit}
+              onChange={(event) => setFormState((previous) => ({ ...previous, rate_per_unit: event.target.value }))}
               required
             />
           </label>
 
           <label>
-            Tarifa
-            <input
-              type="number"
-              step="0.01"
-              min="0.01"
-              value={formState.rate}
-              onChange={(event) => setFormState((previous) => ({ ...previous, rate: event.target.value }))}
-              required
-            />
+            Moneda
+            <input type="text" value={formState.currency} readOnly />
           </label>
 
           <label>
@@ -362,12 +417,32 @@ export default function SuppliersPage() {
             </select>
           </label>
 
+          <label>
+            Email de contacto
+            <input
+              type="email"
+              value={formState.contact_email}
+              onChange={(event) => setFormState((previous) => ({ ...previous, contact_email: event.target.value }))}
+              placeholder="proveedor@empresa.com"
+            />
+          </label>
+
+          <label>
+            Notas
+            <input
+              type="text"
+              value={formState.notes}
+              onChange={(event) => setFormState((previous) => ({ ...previous, notes: event.target.value }))}
+              placeholder="Observaciones internas"
+            />
+          </label>
+
           <div className="categoriesSelector">
             <span>Categorías</span>
 
             <div className="categoryChips">
               {CATEGORY_OPTIONS.map((category) => {
-                const selected = formState.product_categories.includes(category);
+                const selected = formState.categories.includes(category);
 
                 return (
                   <button
@@ -397,26 +472,19 @@ export default function SuppliersPage() {
         <div className="supplierFilters">
           <label>
             País
-            <input
-              type="text"
-              value={countryFilter}
-              list="suppliers-countries"
-              onChange={(event) => setCountryFilter(event.target.value)}
-              placeholder="Ej. Colombia"
-            />
-            <datalist id="suppliers-countries">
-              {countries.map((country) => (
-                <option key={country} value={country} />
+            <select value={countryFilter} onChange={(event) => setCountryFilter(event.target.value)}>
+              <option value="">Todos</option>
+              {COUNTRY_OPTIONS.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
               ))}
-            </datalist>
+            </select>
           </label>
 
           <label>
             Categoría
-            <select
-              value={categoryFilter}
-              onChange={(event) => setCategoryFilter(event.target.value as "" | SupplierCategory)}
-            >
+            <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value as "" | SupplierCategory)}>
               <option value="">Todas</option>
               {CATEGORY_OPTIONS.map((category) => (
                 <option key={category} value={category}>
@@ -426,10 +494,13 @@ export default function SuppliersPage() {
             </select>
           </label>
 
-          <button type="button" onClick={() => {
-            setCountryFilter("");
-            setCategoryFilter("");
-          }}>
+          <button
+            type="button"
+            onClick={() => {
+              setCountryFilter("");
+              setCategoryFilter("");
+            }}
+          >
             Limpiar filtros
           </button>
         </div>
@@ -454,7 +525,9 @@ export default function SuppliersPage() {
                   <th>País</th>
                   <th>Categorías</th>
                   <th>Tarifa</th>
+                  <th>Moneda</th>
                   <th>Estado</th>
+                  <th>Contacto</th>
                   <th>Actualizado</th>
                 </tr>
               </thead>
@@ -465,7 +538,7 @@ export default function SuppliersPage() {
                     <td>{supplier.id}</td>
                     <td>{supplier.name}</td>
                     <td>{supplier.country}</td>
-                    <td>{supplier.product_categories.join(", ")}</td>
+                    <td>{supplier.categories.join(", ")}</td>
                     <td>
                       <div className="inlineActions">
                         <input
@@ -483,9 +556,10 @@ export default function SuppliersPage() {
                         </button>
                       </div>
                     </td>
+                    <td>{supplier.currency}</td>
                     <td>
                       <div className="inlineActions">
-                        <span className={supplier.status === "activo" ? "badge badgeActive" : "badge badgeSuspended"}>
+                        <span className={supplier.status === "active" ? "badge badgeActive" : "badge badgeSuspended"}>
                           {supplier.status}
                         </span>
                         <select
@@ -500,6 +574,7 @@ export default function SuppliersPage() {
                         </select>
                       </div>
                     </td>
+                    <td>{supplier.contact_email ?? "-"}</td>
                     <td>{new Date(supplier.updated_at).toLocaleString()}</td>
                   </tr>
                 ))}
