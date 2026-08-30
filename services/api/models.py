@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
+from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field, model_validator
 
@@ -69,3 +71,70 @@ class SupplierRateUpdate(BaseModel):
 
 class SupplierStatusUpdate(BaseModel):
     status: SupplierStatus
+
+
+class UserRole(str, Enum):
+    ADMIN = "admin"
+    MANAGER = "manager"
+    USER = "user"
+
+
+class ProfileBase(BaseModel):
+    name: str | None = Field(default=None, min_length=1)
+    phone: str | None = Field(default=None, min_length=3)
+    address: str | None = Field(default=None, min_length=3)
+
+
+class ProfileCreate(ProfileBase):
+    pass
+
+
+class ProfileUpdate(ProfileBase):
+    pass
+
+
+class Profile(ProfileBase):
+    id: UUID
+    user_id: UUID
+
+
+class UserBase(BaseModel):
+    email: EmailStr
+
+
+class UserCreate(UserBase):
+    password: str = Field(min_length=8)
+    profile: ProfileCreate | None = None
+
+
+class UserUpdate(BaseModel):
+    email: EmailStr | None = None
+    role: UserRole | None = None
+    password: str | None = Field(default=None, min_length=8)
+
+
+class UserRecord(UserBase):
+    id: UUID
+    hashed_password: str
+    is_active: bool
+    role: UserRole
+    created_at: datetime
+
+
+class UserRead(UserBase):
+    id: UUID
+    is_active: bool
+    role: UserRole
+    created_at: datetime
+    profile: Profile | None = None
+
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: Literal["bearer"] = "bearer"
+
+
+class AuthMeResponse(BaseModel):
+    email: EmailStr
+    role: UserRole
+    profile: Profile | None = None

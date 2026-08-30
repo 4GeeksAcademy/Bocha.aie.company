@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from tinydb.table import Document
 
+from services.api.auth import get_current_active_user
 from services.api.database import get_suppliers_table
 from services.api.models import (
     Supplier,
@@ -40,7 +41,10 @@ def _find_supplier_document(supplier_id: int) -> Document:
 
 
 @router.post("", response_model=Supplier, status_code=201)
-def create_supplier(payload: SupplierCreate) -> Supplier:
+def create_supplier(
+    payload: SupplierCreate,
+    _: object = Depends(get_current_active_user),
+) -> Supplier:
     table = get_suppliers_table()
 
     supplier_data = payload.model_dump(mode="json")
@@ -59,6 +63,7 @@ def create_supplier(payload: SupplierCreate) -> Supplier:
 def list_suppliers(
     country: SupplierCountry | None = Query(default=None),
     category: SupplierCategory | None = Query(default=None),
+    _: object = Depends(get_current_active_user),
 ) -> list[Supplier]:
     table = get_suppliers_table()
     documents = table.all()
@@ -83,13 +88,20 @@ def list_suppliers(
 
 
 @router.get("/{supplier_id}", response_model=Supplier)
-def get_supplier(supplier_id: int) -> Supplier:
+def get_supplier(
+    supplier_id: int,
+    _: object = Depends(get_current_active_user),
+) -> Supplier:
     document = _find_supplier_document(supplier_id)
     return _document_to_supplier(document)
 
 
 @router.patch("/{supplier_id}/rate", response_model=Supplier)
-def update_supplier_rate(supplier_id: int, payload: SupplierRateUpdate) -> Supplier:
+def update_supplier_rate(
+    supplier_id: int,
+    payload: SupplierRateUpdate,
+    _: object = Depends(get_current_active_user),
+) -> Supplier:
     table = get_suppliers_table()
     _find_supplier_document(supplier_id)
 
@@ -106,7 +118,11 @@ def update_supplier_rate(supplier_id: int, payload: SupplierRateUpdate) -> Suppl
 
 
 @router.patch("/{supplier_id}/status", response_model=Supplier)
-def update_supplier_status(supplier_id: int, payload: SupplierStatusUpdate) -> Supplier:
+def update_supplier_status(
+    supplier_id: int,
+    payload: SupplierStatusUpdate,
+    _: object = Depends(get_current_active_user),
+) -> Supplier:
     table = get_suppliers_table()
     _find_supplier_document(supplier_id)
 
@@ -123,7 +139,10 @@ def update_supplier_status(supplier_id: int, payload: SupplierStatusUpdate) -> S
 
 
 @router.delete("/{supplier_id}")
-def delete_supplier(supplier_id: int) -> dict[str, str]:
+def delete_supplier(
+    supplier_id: int,
+    _: object = Depends(get_current_active_user),
+) -> dict[str, str]:
     table = get_suppliers_table()
     _find_supplier_document(supplier_id)
 
