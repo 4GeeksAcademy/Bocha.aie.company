@@ -1,5 +1,4 @@
 from fastapi import (
-    Depends,
     FastAPI,
     File,
     HTTPException,
@@ -10,24 +9,12 @@ from fastapi.responses import (
     Response,
 )
 
-from dotenv import load_dotenv
-from pathlib import Path
-
 
 from packages.incidents_analysis import (
     analyze_csv_text,
     summary_to_csv,
 )
-from services.api.auth import get_current_active_user
-from services.api.routes import (
-    auth_router,
-    profiles_router,
-    suppliers_router,
-    users_router,
-)
-
-
-load_dotenv(Path(__file__).with_name(".env"))
+from services.api.routes import suppliers_router
 
 
 app = FastAPI(
@@ -39,9 +26,6 @@ app = FastAPI(
 
 
 app.include_router(suppliers_router)
-app.include_router(auth_router)
-app.include_router(users_router)
-app.include_router(profiles_router)
 
 
 LAST_ANALYSIS = None
@@ -63,8 +47,7 @@ def root():
     "/api/incidents/analyze"
 )
 async def analyze_incidents(
-    file: UploadFile = File(...),
-    _: object = Depends(get_current_active_user),
+    file: UploadFile = File(...)
 ):
 
     global LAST_ANALYSIS
@@ -153,9 +136,7 @@ async def analyze_incidents(
 @app.get(
     "/api/incidents/results/export"
 )
-def export_results(
-    _: object = Depends(get_current_active_user),
-):
+def export_results():
 
     if LAST_ANALYSIS is None:
 

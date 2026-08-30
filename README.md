@@ -64,41 +64,6 @@ ai-engineering-company-project-monorepo/
 
 ---
 
-## Run available services
-
-The repository does not have a root workspace runner yet, so each service must be started from its own directory or, in the API case, from the monorepo root.
-
-### API: Brasaland Incidents
-
-Run from the monorepo root:
-
-```bash
-source .venv/bin/activate
-python -m uvicorn services.api.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-### UI: Backoffice
-
-Run from `uis/backoffice`:
-
-```bash
-cd uis/backoffice
-npm install
-npm run dev
-```
-
-### UI: Talent Pipeline Tracker
-
-Run from `uis/talent-pipeline-tracker`:
-
-```bash
-cd uis/talent-pipeline-tracker
-npm install
-npm run dev
-```
-
----
-
 ## Milestones (reference)
 
 | Milestone | Focus        | Typical deliverables                        |
