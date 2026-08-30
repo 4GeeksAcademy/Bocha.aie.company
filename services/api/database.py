@@ -20,11 +20,3 @@ def get_db() -> TinyDB:
 
 def get_suppliers_table() -> Table:
     return get_db().table("suppliers")
-
-
-def get_users_table() -> Table:
-    return get_db().table("users")
-
-
-def get_profiles_table() -> Table:
-    return get_db().table("profiles")
