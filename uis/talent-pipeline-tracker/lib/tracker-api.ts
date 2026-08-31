@@ -7,6 +7,12 @@ import type {
   PaginatedResponse,
 } from "@/types/tracker";
 
+import {
+  ApiRequestError,
+  getAccessToken,
+  resetSessionAndRedirect,
+} from "@/lib/auth";
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "https://playground.4geeks.com/tracker/api/v1";
 
@@ -65,20 +71,37 @@ function buildErrorMessage(payload: unknown, fallback: string) {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers = new Headers(init?.headers ?? undefined);
+  const token = getAccessToken();
+
+  if (!token) {
+    resetSessionAndRedirect();
+    throw new ApiRequestError("Debes iniciar sesión para continuar.", 401);
+  }
+
+  headers.set("Authorization", `Bearer ${token}`);
+
+  if (init?.body !== undefined && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
+    headers,
     cache: "no-store",
   });
+
+  if (response.status === 401) {
+    resetSessionAndRedirect();
+    throw new ApiRequestError("Tu sesión expiró. Inicia sesión de nuevo.", 401);
+  }
 
   const payload = await parseJsonSafely(response);
 
   if (!response.ok) {
-    throw new Error(
-      buildErrorMessage(payload, "No se pudo completar la operación con el tracker.")
+    throw new ApiRequestError(
+      buildErrorMessage(payload, "No se pudo completar la operación con el tracker."),
+      response.status
     );
   }
 
