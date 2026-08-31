@@ -10,6 +10,11 @@ import type {
   FormEvent
 } from "react";
 
+import {
+  apiFetch,
+  requestJson,
+} from "@/lib/api";
+
 
 type BreakdownValue = {
 
@@ -145,47 +150,30 @@ export default function IncidentsPage() {
 
     try {
 
-      const response =
-        await fetch(
-
+      const data =
+        await requestJson<
+          AnalysisResult
+        >(
           (
             "/backend"
             + "/api/incidents/analyze"
           ),
-
           {
             method:
               "POST",
-
             body:
               formData,
+          },
+          {
+            requiresAuth:
+              true,
+            fallbackMessage:
+              (
+                "No fue posible "
+                + "analizar el CSV."
+              ),
           }
-
         );
-
-
-      const data =
-        await response
-          .json()
-          .catch(
-            () => null
-          );
-
-
-      if (!response.ok) {
-
-        throw new Error(
-
-          data?.detail
-          ??
-          (
-            "No fue posible "
-            + "analizar el CSV."
-          )
-
-        );
-
-      }
 
 
       setResult(
@@ -232,26 +220,24 @@ export default function IncidentsPage() {
     try {
 
       const response =
-        await fetch(
+        await apiFetch(
           (
             "/backend"
             + "/api/incidents/"
             + "results/export"
-          )
+          ),
+          {},
+          {
+            requiresAuth:
+              true,
+            fallbackMessage:
+              (
+                "No fue posible "
+                + "descargar "
+                + "los resultados."
+              ),
+          }
         );
-
-
-      if (!response.ok) {
-
-        throw new Error(
-          (
-            "No fue posible "
-            + "descargar "
-            + "los resultados."
-          )
-        );
-
-      }
 
 
       const blob =

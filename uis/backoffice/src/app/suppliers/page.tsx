@@ -2,6 +2,8 @@
 
 import { FormEvent, useEffect, useState } from "react";
 
+import { requestJson } from "@/lib/api";
+
 type SupplierStatus = "active" | "suspended";
 type SupplierCountry = "Colombia" | "USA";
 type SupplierCurrency = "COP" | "USD";
@@ -69,33 +71,6 @@ const initialForm: SupplierFormState = {
   notes: "",
 };
 
-function readErrorMessage(payload: unknown, fallback: string): string {
-  if (!payload || typeof payload !== "object") {
-    return fallback;
-  }
-
-  const data = payload as { detail?: unknown };
-
-  if (typeof data.detail === "string") {
-    return data.detail;
-  }
-
-  if (Array.isArray(data.detail)) {
-    return data.detail
-      .map((item) => {
-        if (item && typeof item === "object" && "msg" in item) {
-          const message = (item as { msg?: unknown }).msg;
-          return typeof message === "string" ? message : null;
-        }
-        return null;
-      })
-      .filter((message): message is string => Boolean(message))
-      .join(" | ");
-  }
-
-  return fallback;
-}
-
 export default function SuppliersPage() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [countryFilter, setCountryFilter] = useState("");
@@ -121,14 +96,14 @@ export default function SuppliersPage() {
     const query = params.toString();
     const url = query ? `/backend/suppliers?${query}` : "/backend/suppliers";
 
-    const response = await fetch(url);
-    const data = (await response.json().catch(() => null)) as unknown;
-
-    if (!response.ok) {
-      throw new Error(readErrorMessage(data, "No se pudo cargar el directorio de proveedores."));
-    }
-
-    return (data as Supplier[]) ?? [];
+    return requestJson<Supplier[]>(
+      url,
+      {},
+      {
+        requiresAuth: true,
+        fallbackMessage: "No se pudo cargar el directorio de proveedores.",
+      }
+    );
   }
 
   async function loadSuppliers() {
@@ -238,28 +213,26 @@ export default function SuppliersPage() {
     setLoadingCreate(true);
 
     try {
-      const response = await fetch("/backend/suppliers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      await requestJson<Supplier>(
+        "/backend/suppliers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            name: formState.name.trim(),
+            country: formState.country,
+            categories: formState.categories,
+            rate_per_unit: parsedRate,
+            currency: formState.currency,
+            status: formState.status,
+            contact_email: formState.contact_email.trim() || null,
+            notes: formState.notes.trim() || null,
+          }),
         },
-        body: JSON.stringify({
-          name: formState.name.trim(),
-          country: formState.country,
-          categories: formState.categories,
-          rate_per_unit: parsedRate,
-          currency: formState.currency,
-          status: formState.status,
-          contact_email: formState.contact_email.trim() || null,
-          notes: formState.notes.trim() || null,
-        }),
-      });
-
-      const data = (await response.json().catch(() => null)) as unknown;
-
-      if (!response.ok) {
-        throw new Error(readErrorMessage(data, "No se pudo crear el proveedor."));
-      }
+        {
+          requiresAuth: true,
+          fallbackMessage: "No se pudo crear el proveedor.",
+        }
+      );
 
       setFormState(initialForm);
       await loadSuppliers();
@@ -286,23 +259,20 @@ export default function SuppliersPage() {
     setError("");
 
     try {
-      const response = await fetch(`/backend/suppliers/${supplierId}/rate`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const updated = await requestJson<Supplier>(
+        `/backend/suppliers/${supplierId}/rate`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            rate_per_unit: parsed,
+          }),
         },
-        body: JSON.stringify({
-          rate_per_unit: parsed,
-        }),
-      });
+        {
+          requiresAuth: true,
+          fallbackMessage: "No se pudo actualizar la tarifa.",
+        }
+      );
 
-      const data = (await response.json().catch(() => null)) as unknown;
-
-      if (!response.ok) {
-        throw new Error(readErrorMessage(data, "No se pudo actualizar la tarifa."));
-      }
-
-      const updated = data as Supplier;
       setSuppliers((previous) => previous.map((supplier) => (supplier.id === supplierId ? updated : supplier)));
       setRateDrafts((previous) => ({ ...previous, [supplierId]: updated.rate_per_unit.toString() }));
     } catch (requestError) {
@@ -318,21 +288,18 @@ export default function SuppliersPage() {
     setError("");
 
     try {
-      const response = await fetch(`/backend/suppliers/${supplierId}/status`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const updated = await requestJson<Supplier>(
+        `/backend/suppliers/${supplierId}/status`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ status }),
         },
-        body: JSON.stringify({ status }),
-      });
+        {
+          requiresAuth: true,
+          fallbackMessage: "No se pudo actualizar el estado.",
+        }
+      );
 
-      const data = (await response.json().catch(() => null)) as unknown;
-
-      if (!response.ok) {
-        throw new Error(readErrorMessage(data, "No se pudo actualizar el estado."));
-      }
-
-      const updated = data as Supplier;
       setSuppliers((previous) => previous.map((supplier) => (supplier.id === supplierId ? updated : supplier)));
     } catch (requestError) {
       if (requestError instanceof Error) {

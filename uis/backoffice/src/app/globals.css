@@ -85,6 +85,9 @@ input {
 
   gap:
     24px;
+
+  align-items:
+    center;
 }
 
 
@@ -97,6 +100,12 @@ input {
 .navLinks a:hover {
   opacity:
     1;
+}
+
+
+.navCluster {
+  flex-wrap:
+    wrap;
 }
 
 
@@ -157,6 +166,12 @@ input {
 button {
   display:
     inline-block;
+
+
+select,
+textarea {
+  font: inherit;
+}
 
   border:
     0;
@@ -355,6 +370,211 @@ button:disabled {
 .metric strong {
   font-size:
     30px;
+}
+
+
+.ghostButton {
+  background:
+    transparent;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.22
+    );
+
+  padding:
+    10px 14px;
+}
+
+
+.authSplash {
+  min-height:
+    100vh;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  padding:
+    32px;
+
+  color:
+    #4b5563;
+}
+
+
+.authPage {
+  width:
+    min(
+      520px,
+      92%
+    );
+
+  margin:
+    56px auto;
+}
+
+
+.authCard h1 {
+  margin-bottom:
+    10px;
+}
+
+
+.authForm,
+.profileForm {
+  display:
+    grid;
+
+  gap:
+    16px;
+}
+
+
+.authForm label,
+.profileForm label,
+.supplierForm label,
+.supplierFilters label {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    8px;
+
+  font-weight:
+    600;
+}
+
+
+.authForm input,
+.profileForm input,
+.supplierForm input,
+.supplierForm select,
+.supplierFilters select,
+.suppliersTable input,
+.suppliersTable select {
+  width:
+    100%;
+
+  min-height:
+    44px;
+
+  border:
+    1px solid #d0d7de;
+
+  border-radius:
+    8px;
+
+  padding:
+    10px 12px;
+
+  background:
+    white;
+}
+
+
+.fieldError {
+  color:
+    #a12020;
+
+  font-weight:
+    500;
+}
+
+
+.authMessage {
+  margin-top:
+    0;
+}
+
+
+.authFooter {
+  margin:
+    18px 0 0;
+
+  color:
+    #656d76;
+}
+
+
+.authFooter a {
+  color:
+    #1f2328;
+
+  font-weight:
+    700;
+}
+
+
+.profileSummary {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap:
+    20px;
+}
+
+
+.profileSummary p {
+  margin-bottom:
+    0;
+
+  color:
+    #656d76;
+}
+
+
+.fullWidthField {
+  grid-column:
+    1 / -1;
+}
+
+
+.successMessage {
+  margin:
+    0;
+
+  padding:
+    14px;
+
+  border-radius:
+    8px;
+
+  background:
+    #ecfdf3;
+
+  color:
+    #166534;
+}
+
+
+@media (
+  max-width: 720px
+) {
+
+  .profileSummary,
+  .metrics {
+    grid-template-columns:
+      1fr;
+  }
+
 }
 
 

@@ -1,0 +1,74 @@
+
+> backoffice@0.1.0 build
+> next build
+
+▲ Next.js 16.3.1 (Turbopack)
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /workspaces/Bocha.aie.company/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /workspaces/Bocha.aie.company/uis/backoffice/package-lock.json
+
+✓ Running next.config.ts took 34ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1511ms
+  Running TypeScript ...
+  Finished TypeScript in 1879ms ...
+  Collecting page data using 1 worker ...
+  Generating static pages using 1 worker (0/9) ...
+⨯ useSearchParams() should be wrapped in a suspense boundary at page "/404". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at Object.X (/workspaces/Bocha.aie.company/uis/backoffice/.next/server/chunks/ssr/0jo__next_0zl81c6._.js:2:3038)
+    at q (/workspaces/Bocha.aie.company/uis/backoffice/.next/server/chunks/ssr/0jo__next_0zl81c6._.js:1:9745)
+    at /workspaces/Bocha.aie.company/uis/backoffice/.next/server/chunks/ssr/[root-of-the-server]__0rii9bx._.js:1:2820
+    at al (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:85944)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:87760)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106280)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at aS (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:114685)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:100379)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at aS (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:114685)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:100379)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at aS (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:114685)
+    at ap (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:111684)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109897)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:100962)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at au (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:86296)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:87805)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at aS (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:114685)
+    at ap (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:111684)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109897)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:87724)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at au (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:86296)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:87805)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:87724)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at au (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:86296)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:87805)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at au (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:86296)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:87805)
+    at ah (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:109623)
+    at af (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:106940)
+    at ac (/workspaces/Bocha.aie.company/uis/backoffice/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:105898)
+Error occurred prerendering page "/_not-found". Read more: https://nextjs.org/docs/messages/prerender-error
+Export encountered an error on /_not-found/page: /_not-found, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null
