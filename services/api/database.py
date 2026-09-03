@@ -28,3 +28,11 @@ def get_users_table() -> Table:
 
 def get_profiles_table() -> Table:
     return get_db().table("profiles")
+
+
+def get_password_resets_table() -> Table:
+    return get_db().table("password_resets")
+
+
+def get_password_reset_audit_table() -> Table:
+    return get_db().table("password_reset_audit")

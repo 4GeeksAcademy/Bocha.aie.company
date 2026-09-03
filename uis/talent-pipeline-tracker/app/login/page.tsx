@@ -121,6 +121,9 @@ export default function LoginPage() {
           <p className="text-sm text-stone-600">
             ¿Necesitas acceso? <Link href="/register" className="font-semibold text-stone-900">Crear cuenta</Link>
           </p>
+          <p className="text-sm text-stone-600">
+            <Link href="/forgot-password" className="font-semibold text-stone-900">¿Olvidaste tu contraseña?</Link>
+          </p>
         </SectionCard>
       </div>
     </main>

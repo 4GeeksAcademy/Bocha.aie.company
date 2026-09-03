@@ -98,6 +98,9 @@ export default function LoginPage() {
         <p className="authFooter">
           ¿Todavía no tienes cuenta? <Link href="/register">Crear usuario</Link>
         </p>
+        <p className="authFooter">
+          <Link href="/forgot-password">¿Olvidaste tu contraseña?</Link>
+        </p>
       </section>
     </main>
   );

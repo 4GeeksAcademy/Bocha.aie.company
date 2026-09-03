@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+import hashlib
 import os
+import secrets
 from uuid import UUID
 
 from fastapi import Depends, HTTPException, status
@@ -30,6 +32,20 @@ def get_jwt_secret() -> str:
 def get_access_token_expire_minutes() -> int:
     raw_value = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
     return int(raw_value)
+
+
+def get_reset_token_expire_minutes() -> int:
+    raw_value = os.getenv("RESET_TOKEN_EXPIRE_MINUTES", "30")
+    return int(raw_value)
+
+
+def generate_reset_token() -> str:
+    return secrets.token_urlsafe(32)
+
+
+def hash_reset_token(raw_token: str) -> str:
+    # Los tokens de reseteo tienen entropía alta: un digest determinista basta para buscarlos por igualdad.
+    return hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
 
 
 def hash_password(password: str) -> str:

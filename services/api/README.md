@@ -30,4 +30,15 @@ El archivo `services/api/.env` debe existir con al menos estas variables:
 ```env
 JWT_SECRET=tu_clave_secreta
 ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Recuperación de contraseña (AUTH-03)
+RESEND_API_KEY=re_tu_api_key
+EMAIL_FROM="Brasaland <onboarding@resend.dev>"
+FRONTEND_RESET_URL=http://localhost:3000/reset-password
+RESET_TOKEN_EXPIRE_MINUTES=30
+PASSWORD_RESET_RATE_LIMIT_MAX=3
+PASSWORD_RESET_RATE_LIMIT_WINDOW_MINUTES=15
 ```
+
+Ver [`.env.example`](.env.example) como referencia. `RESEND_API_KEY` se obtiene en [resend.com](https://resend.com);
+`FRONTEND_RESET_URL` debe apuntar a la página `/reset-password` del frontend que esté corriendo.

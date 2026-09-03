@@ -103,6 +103,11 @@ def get_user_by_id(user_id: UUID) -> UserRecord | None:
     return _document_to_user(document)
 
 
+def update_user_password(user_id: UUID, hashed_password: str) -> None:
+    table = get_users_table()
+    table.update({"hashed_password": hashed_password}, Query().id == str(user_id))
+
+
 def get_user_by_email(email: str) -> UserRecord | None:
     table = get_users_table()
     document = table.get(Query().email == email)

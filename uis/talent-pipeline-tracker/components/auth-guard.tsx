@@ -82,6 +82,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
           <nav className="flex flex-wrap items-center justify-end gap-3 text-sm font-semibold text-stone-700">
             <Link href="/">Pipeline</Link>
             <Link href="/account/profile">Mi perfil</Link>
+            <Link href="/account/change-password">Cambiar contraseña</Link>
             <LogoutButton />
           </nav>
         </div>
