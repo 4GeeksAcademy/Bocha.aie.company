@@ -138,3 +138,21 @@ class AuthMeResponse(BaseModel):
     email: EmailStr
     role: UserRole
     profile: Profile | None = None
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(min_length=1)
+    new_password: str = Field(min_length=8)
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8)
+
+
+class PasswordActionResponse(BaseModel):
+    message: str

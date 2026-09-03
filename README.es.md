@@ -96,3 +96,138 @@ Esta plantilla fue creada como parte del Programa de Carrera de Ingeniería de I
 Puedes encontrar otras plantillas y recursos similares en la [página de GitHub de 4Geeks Academy](https://github.com/4geeksacademy).
 
 _Esta plantilla la mantiene 4Geeks Academy para el track de Ingeniería de IA. Uso exclusivo del programa._
+
+
+
+## Levantar backend y UIs para probar autenticación manualmente
+
+Esta sección describe cómo levantar el backend y las dos apps internas del monorepo para probar manualmente los flujos de login, register, logout, profile y redirecciones.
+
+### 1. Preparar el backend FastAPI
+
+1. Sitúate en la raíz del monorepo.
+2. Activa el entorno virtual.
+
+Si ya existe el entorno de este workspace:
+
+```bash
+source myenv/bin/activate
+```
+
+Si tu entorno local usa otro nombre, por ejemplo el documentado en la API:
+
+```bash
+source .venv/bin/activate
+```
+
+3. Instala las dependencias del backend si todavía no están instaladas.
+
+```bash
+python -m pip install -r services/api/requirements.txt
+```
+
+4. Verifica que exista el archivo de entorno del backend en [services/api/.env](services/api/.env) con estas variables mínimas:
+
+```env
+JWT_SECRET=tu_clave_secreta
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+5. Levanta la API en el puerto 8000.
+
+```bash
+python -m uvicorn services.api.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+La API quedará disponible en http://127.0.0.1:8000.
+
+### 2. Levantar Backoffice
+
+1. Abre una segunda terminal.
+2. Entra en [uis/backoffice](uis/backoffice).
+
+```bash
+cd uis/backoffice
+```
+
+3. Instala dependencias si todavía no lo hiciste.
+
+```bash
+npm install
+```
+
+4. Levanta la app en un puerto dedicado, por ejemplo 3000.
+
+```bash
+npm run dev -- --hostname 0.0.0.0 --port 3000
+```
+
+Accede a http://127.0.0.1:3000.
+
+### 3. Levantar Talent Pipeline Tracker
+
+1. Abre una tercera terminal.
+2. Entra en [uis/talent-pipeline-tracker](uis/talent-pipeline-tracker).
+
+```bash
+cd uis/talent-pipeline-tracker
+```
+
+3. Instala dependencias si todavía no lo hiciste.
+
+```bash
+npm install
+```
+
+4. Levanta la app en otro puerto, por ejemplo 3001.
+
+```bash
+npm run dev -- --hostname 0.0.0.0 --port 3001
+```
+
+Accede a http://127.0.0.1:3001.
+
+### 4. Flujo manual recomendado de prueba
+
+#### Backoffice
+
+1. Abre http://127.0.0.1:3000/login.
+2. Intenta entrar con credenciales inválidas y confirma que aparece un mensaje de error.
+3. Ve a http://127.0.0.1:3000/register.
+4. Registra un usuario nuevo con email y password válidos. Puedes completar también nombre, teléfono y dirección.
+5. Confirma que el registro hace login automático y redirige a la home privada.
+6. Navega a la home, incidencias y proveedores y confirma que no hay redirección mientras exista sesión.
+7. Abre http://127.0.0.1:3000/account/profile y verifica que carga email, role y datos de perfil.
+8. Modifica nombre, teléfono o dirección y confirma que el guardado responde correctamente.
+9. Pulsa Cerrar sesión y confirma que vuelves a /login.
+10. Intenta abrir directamente una ruta privada como http://127.0.0.1:3000/suppliers sin sesión y verifica la redirección a /login.
+
+#### Talent Pipeline Tracker
+
+1. Abre http://127.0.0.1:3001/login.
+2. Intenta entrar con credenciales inválidas y confirma el error.
+3. Ve a http://127.0.0.1:3001/register.
+4. Registra un usuario nuevo o entra con uno existente.
+5. Confirma que, tras login o registro, la app redirige a la ruta principal.
+6. Abre http://127.0.0.1:3001/account/profile y verifica lectura y edición del perfil autenticado.
+7. Pulsa Cerrar sesión y confirma la vuelta a /login.
+8. Intenta abrir directamente http://127.0.0.1:3001/ o una ruta privada como /candidates/123 sin sesión y verifica la redirección.
+
+### 5. Qué validar exactamente
+
+Durante las pruebas manuales conviene verificar estos puntos:
+
+1. Login correcto guarda el token en localStorage.
+2. Login incorrecto no crea sesión y muestra error.
+3. Register crea usuario y luego inicia sesión automáticamente.
+4. Logout elimina el token y bloquea el acceso posterior a rutas privadas.
+5. /account/profile carga datos desde auth/me.
+6. /account/profile actualiza datos con profiles/me.
+7. Una ruta privada sin token redirige a /login.
+8. Si una llamada protegida devuelve 401, la sesión se limpia y la app redirige a /login.
+
+### 6. Notas importantes
+
+1. Tanto Backoffice como Talent Pipeline Tracker usan el backend local de [services/api](services/api) para login, registro y perfil.
+2. Backoffice además consume rutas protegidas del mismo backend para incidencias y proveedores.
+3. Talent Pipeline Tracker ya envía JWT en su cliente frontend, pero su funcionamiento end-to-end depende también del servicio que responda sus rutas de records y notes.

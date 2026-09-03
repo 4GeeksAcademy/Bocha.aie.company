@@ -1,6 +1,6 @@
 export const AUTH_TOKEN_KEY = "brasaland-backoffice-access-token";
 
-export const PUBLIC_ROUTES = ["/login", "/register"] as const;
+export const PUBLIC_ROUTES = ["/login", "/register", "/forgot-password", "/reset-password"] as const;
 
 export const DEFAULT_AUTHENTICATED_ROUTE = "/";
 
