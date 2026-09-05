@@ -18,9 +18,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Brasaland Talent Pipeline Tracker",
-  description:
-    "Consola interna de People & Culture para gestionar candidaturas de Brasaland.",
+  title: "Brasaland Centro de incidencias",
+  description: "Gestor centralizado de incidencias operativas de Brasaland.",
 };
 
 export default function RootLayout({

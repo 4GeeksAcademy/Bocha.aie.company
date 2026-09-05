@@ -36,3 +36,7 @@ def get_password_resets_table() -> Table:
 
 def get_password_reset_audit_table() -> Table:
     return get_db().table("password_reset_audit")
+
+
+def get_incidents_table() -> Table:
+    return get_db().table("incidents")

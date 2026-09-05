@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 
-import { CandidateListPage } from "@/components/candidate-list-page";
+import { IncidentManagerPage } from "@/components/incident-manager-page";
 
 export default function Home() {
   return (
     <Suspense fallback={null}>
-      <CandidateListPage />
+      <IncidentManagerPage />
     </Suspense>
   );
 }
