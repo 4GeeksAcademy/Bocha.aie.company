@@ -72,15 +72,15 @@ export function AuthGuard({ children }: AuthGuardProps) {
         <div className="tracker-shell mx-auto flex w-full max-w-7xl items-center justify-between gap-4 rounded-[32px] border border-white/60 px-5 py-4">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-[color:var(--accent-strong)]">
-              Brasaland Talent Ops
+              Brasaland Operations
             </p>
             <Link href="/" className="mt-2 block text-lg font-semibold text-stone-950">
-              Talent Pipeline Tracker
+              Centro de incidencias
             </Link>
           </div>
 
           <nav className="flex flex-wrap items-center justify-end gap-3 text-sm font-semibold text-stone-700">
-            <Link href="/">Pipeline</Link>
+            <Link href="/">Incidencias</Link>
             <Link href="/account/profile">Mi perfil</Link>
             <Link href="/account/change-password">Cambiar contraseña</Link>
             <LogoutButton />

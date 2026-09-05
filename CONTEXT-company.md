@@ -1,235 +1,177 @@
-# CONTEXT — Directorio de Proveedores · Brasaland
-
-_These instructions are also available in [English](./CONTEXT-brasaland.en.md)._
-
-> **Milestone:** 09 — Lightweight Storage API  
-> **Ruta en el repositorio:** `09-lightweight-storage/CONTEXT-brasaland.md`
-
----
+# CONTEXT — Gestor de Incidencias Centralizado · Brasaland
 
 ## Tu empresa
 
-Eres parte del equipo **Brasaland Digital**, la unidad tecnológica interna de Brasaland, una cadena de restaurantes de comida a la brasa con **14 locales** en Colombia y Florida. Tu tech lead es **Nicolás Park**, CTO, y quien ha solicitado este proyecto es **Lucía Fernández**, Procurement Manager.
+**Brasaland** es una cadena de restaurantes de comida a la brasa con **14 locales** operando en Colombia y Florida (EE.UU.). Empleas a unas 115 personas entre personal de cocina y sala, supervisores de operaciones y el equipo corporativo de Medellín, con oficina comercial en Miami.
 
-Brasaland trabaja con alrededor de **20 proveedores activos** distribuidos entre Colombia y Florida. Hasta ahora, Lucía gestiona el directorio en una hoja de cálculo compartida por correo. Cada vez que cambia la tarifa de un proveedor o hay que incorporar uno nuevo, hay tres versiones del fichero en circulación y nadie sabe cuál es la oficial. Este proyecto crea la fuente de verdad única.
-
----
-
-## Modelo de proveedor
-
-Cada proveedor en el directorio de Brasaland tiene la siguiente estructura:
-
-| Campo           | Tipo                                  | Descripción                                              |
-| --------------- | ------------------------------------- | -------------------------------------------------------- |
-| `name`          | string, requerido                     | Nombre comercial del proveedor                           |
-| `country`       | string, requerido                     | País de operación: `"Colombia"` o `"USA"`                |
-| `categories`    | lista de strings, requerido, mínimo 1 | Categorías de producto que suministra (ver lista válida) |
-| `rate_per_unit` | float, requerido, > 0                 | Tarifa vigente por unidad en la moneda del país          |
-| `currency`      | string, requerido                     | `"COP"` para Colombia, `"USD"` para USA                  |
-| `updated_at`    | datetime, generado por el sistema     | Timestamp de la última actualización de tarifa           |
-| `status`        | string, requerido                     | `"active"` o `"suspended"`                               |
-| `contact_email` | string, opcional                      | Email de contacto del proveedor                          |
-| `notes`         | string, opcional                      | Observaciones internas del equipo de compras             |
-
-### Categorías válidas
-
-```python
-VALID_CATEGORIES = [
-    "carne",
-    "verduras_y_hortalizas",
-    "salsas_y_condimentos",
-    "bebidas",
-    "packaging",
-    "productos_limpieza",
-    "lacteos",
-    "carbon_y_combustible"
-]
-```
-
-### Estados válidos
-
-```python
-VALID_STATUSES = ["active", "suspended"]
-```
+Como parte del equipo de **Brasaland Digital**, llevas hitos construyendo la plataforma interna de la empresa. Este proyecto integra en esa plataforma un gestor centralizado de incidencias, para que cualquier sede pueda reportar problemas operativos, de cliente o internos — y el equipo de operaciones pueda hacer seguimiento desde un único panel.
 
 ---
 
-## Datos iniciales del seeder
+## Quién lo usa y por qué
 
-El seeder debe cargar exactamente los siguientes proveedores. Son los que Lucía tiene en su hoja de cálculo actual — la que este proyecto reemplaza.
+**Felipe Guerrero (Director de Operaciones)** necesita saber qué está pasando en cada local sin tener que llamar a cada gerente. Hoy recibe reportes por WhatsApp o al final de la semana. Con este gestor, cualquier incidencia queda registrada al momento, categorizada y asignada a una sede.
 
-```python
-SUPPLIERS_SEED = [
-    {
-        "name": "Carnes del Valle S.A.S.",
-        "country": "Colombia",
-        "categories": ["carne"],
-        "rate_per_unit": 28500.0,
-        "currency": "COP",
-        "status": "active",
-        "contact_email": "ventas@carnesdelvalle.co",
-        "notes": "Proveedor principal de res y cerdo para Medellín. Entrega martes y viernes."
-    },
-    {
-        "name": "Frigorífico Antioqueño",
-        "country": "Colombia",
-        "categories": ["carne"],
-        "rate_per_unit": 27900.0,
-        "currency": "COP",
-        "status": "active",
-        "contact_email": "pedidos@frigorificoa.co",
-        "notes": "Proveedor secundario. Usado cuando Carnes del Valle no tiene stock."
-    },
-    {
-        "name": "Verduras La Cosecha",
-        "country": "Colombia",
-        "categories": ["verduras_y_hortalizas"],
-        "rate_per_unit": 3200.0,
-        "currency": "COP",
-        "status": "active",
-        "contact_email": "lacosecha@gmail.com",
-        "notes": "Mercado mayorista de Medellín. Entrega diaria antes de las 7am."
-    },
-    {
-        "name": "Condimentos El Sabor",
-        "country": "Colombia",
-        "categories": ["salsas_y_condimentos"],
-        "rate_per_unit": 12400.0,
-        "currency": "COP",
-        "status": "active",
-        "contact_email": "info@elsabor.co"
-    },
-    {
-        "name": "Distribuidora RefriCol",
-        "country": "Colombia",
-        "categories": ["bebidas", "lacteos"],
-        "rate_per_unit": 4100.0,
-        "currency": "COP",
-        "status": "active",
-        "contact_email": "refricol.pedidos@gmail.com"
-    },
-    {
-        "name": "Empaques y Más",
-        "country": "Colombia",
-        "categories": ["packaging"],
-        "rate_per_unit": 890.0,
-        "currency": "COP",
-        "status": "active",
-        "contact_email": "ventas@empaquesymas.co",
-        "notes": "Suministra cajas, bolsas y servilletas para todos los locales de Colombia."
-    },
-    {
-        "name": "Limpiahogar Profesional",
-        "country": "Colombia",
-        "categories": ["productos_limpieza"],
-        "rate_per_unit": 7600.0,
-        "currency": "COP",
-        "status": "suspended",
-        "contact_email": "limpiahogar@promail.co",
-        "notes": "Suspendido por incumplimiento en entregas. En revisión por Lucía."
-    },
-    {
-        "name": "CarboCo",
-        "country": "Colombia",
-        "categories": ["carbon_y_combustible"],
-        "rate_per_unit": 45000.0,
-        "currency": "COP",
-        "status": "active",
-        "contact_email": "pedidos@carboco.co",
-        "notes": "Único proveedor homologado de carbón para las brasas. Contrato anual."
-    },
-    {
-        "name": "Miami Meat Distributors LLC",
-        "country": "USA",
-        "categories": ["carne"],
-        "rate_per_unit": 6.80,
-        "currency": "USD",
-        "status": "active",
-        "contact_email": "orders@miamimeat.com",
-        "notes": "Proveedor principal de carne para los locales de Florida."
-    },
-    {
-        "name": "Sunshine Produce FL",
-        "country": "USA",
-        "categories": ["verduras_y_hortalizas"],
-        "rate_per_unit": 2.15,
-        "currency": "USD",
-        "status": "active",
-        "contact_email": "sales@sunshineproduce.com"
-    },
-    {
-        "name": "Latin Flavors Inc.",
-        "country": "USA",
-        "categories": ["salsas_y_condimentos", "bebidas"],
-        "rate_per_unit": 4.50,
-        "currency": "USD",
-        "status": "active",
-        "contact_email": "orders@latinflavors.com",
-        "notes": "Importa salsas colombianas para el mercado de Florida."
-    },
-    {
-        "name": "PackRight USA",
-        "country": "USA",
-        "categories": ["packaging"],
-        "rate_per_unit": 0.35,
-        "currency": "USD",
-        "status": "active",
-        "contact_email": "info@packright.us"
-    },
-    {
-        "name": "CleanPro Florida",
-        "country": "USA",
-        "categories": ["productos_limpieza"],
-        "rate_per_unit": 12.90,
-        "currency": "USD",
-        "status": "active",
-        "contact_email": "orders@cleanproflorida.com"
-    },
-    {
-        "name": "GrillFuel Supply Co.",
-        "country": "USA",
-        "categories": ["carbon_y_combustible"],
-        "rate_per_unit": 38.50,
-        "currency": "USD",
-        "status": "active",
-        "contact_email": "supply@grillfuel.com",
-        "notes": "Proveedor de carbón para Florida. Precio sujeto a revisión trimestral."
-    },
-    {
-        "name": "Bebidas Andinas",
-        "country": "Colombia",
-        "categories": ["bebidas"],
-        "rate_per_unit": 3800.0,
-        "currency": "COP",
-        "status": "suspended",
-        "contact_email": "ventas@bebidasandinas.co",
-        "notes": "Suspendido. Precio por encima del mercado tras última renegociación."
-    }
-]
-```
+**Mariana Restrepo (CEO)** quiere ver en el panel ejecutivo cuántas incidencias hay abiertas esta semana, de qué tipo y en qué locales. Hasta ahora eso no existe.
+
+El formulario lo usarán **gerentes de local** (desde tablet en cocina o sala) y el **equipo de central** (desde escritorio en Medellín o Miami).
 
 ---
 
-## Restricciones de negocio
+## Sedes de Brasaland
 
-- **Moneda por país:** Un proveedor de `"Colombia"` debe tener `currency = "COP"`. Un proveedor de `"USA"` debe tener `currency = "USD"`. La API debe rechazar combinaciones inconsistentes.
-- **Categorías múltiples:** Un proveedor puede suministrar más de una categoría (por ejemplo, bebidas y lácteos). La lista `categories` debe tener al menos un elemento válido.
-- **Trazabilidad de tarifas:** Cada vez que se actualiza `rate_per_unit`, el campo `updated_at` debe registrar el timestamp exacto del cambio. Este dato es requerido por Lucía para auditorías de precios.
-- **Suspensión, no borrado:** En la operativa real de Brasaland, los proveedores no se eliminan del sistema — se suspenden. El endpoint `DELETE` existe para correcciones de datos erróneos, no como flujo habitual.
+El campo `branch` debe contener exactamente uno de estos valores:
+
+| Valor en base de datos  | Nombre para mostrar         |
+| ----------------------- | --------------------------- |
+| `central`               | Central (Medellín / Miami)  |
+| `medellin_centro`       | Medellín Centro             |
+| `medellin_laureles`     | Medellín Laureles           |
+| `medellin_envigado`     | Medellín Envigado           |
+| `medellin_bello`        | Medellín Bello              |
+| `medellin_itagui`       | Medellín Itagüí             |
+| `bogota_chapinero`      | Bogotá Chapinero            |
+| `bogota_usaquen`        | Bogotá Usaquén              |
+| `cali_granada`          | Cali Granada                |
+| `barranquilla_norte`    | Barranquilla Norte          |
+| `miami_doral`           | Miami Doral                 |
+| `miami_hialeah`         | Miami Hialeah               |
+| `miami_kendall`         | Miami Kendall               |
+| `orlando_international` | Orlando International Drive |
+| `fort_lauderdale`       | Fort Lauderdale             |
+
+Cuando el origen sea `internal` o `customer` y no corresponda a un local específico, se usará `central`.
 
 ---
 
-## Lo que verá Lucía en el frontend
+## Categorías de incidencias
 
-La página del directorio debe permitirle a Lucía:
+El campo `category` debe contener exactamente uno de estos valores:
 
-1. Ver todos los proveedores de un vistazo, con indicación clara de cuáles están activos y cuáles suspendidos.
-2. Filtrar por país (Colombia / USA) para ver solo los proveedores relevantes a cada mercado.
-3. Filtrar por categoría para responder preguntas como "¿qué proveedores de carne tenemos activos en USA?".
-4. Registrar un proveedor nuevo desde un formulario.
-5. Actualizar la tarifa de un proveedor existente desde la interfaz.
-6. Activar o suspender un proveedor con un solo clic.
+| Valor                | Descripción                                                                       |
+| -------------------- | --------------------------------------------------------------------------------- |
+| `equipment_failure`  | Fallo de equipamiento de cocina o sala (horno, freidora, cámara frigorífica, TPV) |
+| `supply_issue`       | Problema con insumos: falta de producto, calidad deficiente, entrega incorrecta   |
+| `customer_complaint` | Queja o reclamación de cliente: producto, servicio, tiempo de espera, experiencia |
+| `staff_issue`        | Incidencia relacionada con personal: ausencia, conflicto, accidente laboral leve  |
+| `facility_issue`     | Problema de instalaciones: agua, electricidad, climatización, limpieza            |
+| `pos_system`         | Error en el sistema de caja o TPV                                                 |
+| `delivery_issue`     | Problema con pedidos a domicilio o plataformas de delivery                        |
+| `other`              | Cualquier incidencia que no encaje en las categorías anteriores                   |
 
 ---
 
-_Documento interno — 4Geeks Academy · AI Engineering Track_
+## Estados y ciclo de vida
+
+| Valor         | Significado en Brasaland                                           |
+| ------------- | ------------------------------------------------------------------ |
+| `open`        | Incidencia recién registrada, pendiente de asignar                 |
+| `in_progress` | El equipo de operaciones o el gerente del local está gestionándola |
+| `resolved`    | Incidencia cerrada con solución confirmada                         |
+| `discarded`   | Registrada por error o duplicada — no requiere acción              |
+
+Transiciones válidas: `open → in_progress`, `open → discarded`, `in_progress → resolved`, `in_progress → discarded`. Los estados `resolved` y `discarded` son finales.
+
+---
+
+## Orígenes
+
+| Valor      | Cuándo usarlo en Brasaland                                                  |
+| ---------- | --------------------------------------------------------------------------- |
+| `customer` | Queja o incidencia comunicada por un cliente (en local, por app, por email) |
+| `branch`   | Reportada por el gerente o personal de un local específico                  |
+| `internal` | Detectada por el equipo corporativo (operaciones, tecnología, RRHH)         |
+
+---
+
+## Datos históricos — seed desde CSV
+
+El fichero CSV del proyecto **incidents-file-analyzer** (`incidents-<empresa>.csv` en `content/contexts/incidents-file-analysis/`) contiene incidencias exportadas del sistema legacy de atención al cliente. Todas son de origen cliente (`origin: "customer"`).
+
+El esquema del CSV del analizador usa nombres de campo, estados y categorías distintos a los de este gestor. **No insertes filas del CSV directamente.** Reutiliza la lógica de validación compartida del analizador y aplica las transformaciones siguientes antes del insert.
+
+**Campo identificador para idempotencia:** usa `incident_id` del CSV Brasaland. Si no existe, usa la combinación `title + created_at`.
+
+### Mapeo directo de campos
+
+| Campo CSV                   | Campo del modelo | Transformación                                                                 |
+| --------------------------- | ---------------- | ------------------------------------------------------------------------------ |
+| `incident_id` / `ticket_id` | —                | Solo control de duplicados — no se almacena                                    |
+| `description`               | `title`          | Primeros 120 caracteres de `description`, recortados. Descartar si queda vacío |
+| `description`               | `description`    | Copiar literalmente                                                            |
+| `date`                      | `created_at`     | Parsear `YYYY-MM-DD` como medianoche UTC. `updated_at` igual al insertar       |
+| —                           | `origin`         | Siempre `"customer"` en todos los registros del seed                           |
+
+### Mapeo de estados (todas las empresas)
+
+| CSV `status` | Modelo `status` |
+| ------------ | --------------- |
+| `OPEN`       | `open`          |
+| `CLOSED`     | `resolved`      |
+| `DISCARDED`  | `discarded`     |
+
+### Mapeo de categorías (Brasaland)
+
+| CSV `category`       | Modelo `category`    |
+| -------------------- | -------------------- |
+| `CUSTOMER_COMPLAINT` | `customer_complaint` |
+| `EQUIPMENT`          | `equipment_failure`  |
+| `SUPPLY`             | `supply_issue`       |
+| `FOOD_QUALITY`       | `customer_complaint` |
+| `STAFF`              | `staff_issue`        |
+
+### Mapeo de sede (Brasaland)
+
+Mapea `location_id` del CSV a `branch` del modelo. Si falta o no hay mapeo, usa `central`.
+
+| CSV `location_id` | Modelo `branch`         |
+| ----------------- | ----------------------- |
+| `COL-01`          | `medellin_centro`       |
+| `COL-02`          | `medellin_laureles`     |
+| `COL-03`          | `medellin_envigado`     |
+| `COL-04`          | `medellin_bello`        |
+| `COL-05`          | `medellin_itagui`       |
+| `COL-06`          | `bogota_chapinero`      |
+| `COL-07`          | `bogota_usaquen`        |
+| `COL-08`          | `cali_granada`          |
+| `COL-09`          | `barranquilla_norte`    |
+| `COL-10`          | `central`               |
+| `FLA-01`          | `miami_doral`           |
+| `FLA-02`          | `miami_hialeah`         |
+| `FLA-03`          | `miami_kendall`         |
+| `FLA-04`          | `orlando_international` |
+
+Los registros que fallen la validación o no se puedan mapear se descartan y se reportan en consola.
+
+---
+
+## Valores esperados tras el seed
+
+Tras cargar el CSV, `/api/incidents/summary` debe devolver totales por `status` y `category` del **modelo** que coincidan con los siguientes conteos transformados. Corresponden a los **96 registros válidos** de `incidents-brasaland.csv` del proyecto analizador (excluidas filas inválidas).
+
+**Por `status` del modelo:**
+
+| Modelo `status` | Conteo |
+| --------------- | ------ |
+| `open`          | 32     |
+| `resolved`      | 50     |
+| `discarded`     | 14     |
+
+**Por `category` del modelo:**
+
+| Modelo `category`    | Conteo |
+| -------------------- | ------ |
+| `customer_complaint` | 48     |
+| `equipment_failure`  | 17     |
+| `supply_issue`       | 22     |
+| `staff_issue`        | 9      |
+
+Contrasta con la salida del script analizador: el CSV crudo usa `OPEN`/`CLOSED`/`DISCARDED` y códigos como `CUSTOMER_COMPLAINT`/`FOOD_QUALITY`. Los totales anteriores son los valores **post-transformación** que debe producir tu gestor.
+
+---
+
+## Notas de implementación
+
+- El formulario lo usarán gerentes de local desde dispositivos táctiles: los campos deben ser suficientemente grandes y el desplegable de sede debe mostrar el nombre legible (`Medellín Centro`), no el valor interno (`medellin_centro`).
+- Los mensajes de error deben estar en el idioma base elegido para la aplicación. Si has implementado soporte bilingüe en hitos anteriores, mantén esa lógica.
+- Las incidencias de tipo `customer_complaint` con estado `open` durante más de 48 horas son prioritarias para Felipe — aunque la alerta automática no es parte de este proyecto, diseña el modelo de datos pensando en que ese filtro deberá ser fácil de implementar más adelante.

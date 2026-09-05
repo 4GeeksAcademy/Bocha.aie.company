@@ -3,8 +3,13 @@ from fastapi import (
     FastAPI,
     File,
     HTTPException,
+    Request,
     UploadFile,
 )
+from fastapi.middleware.cors import CORSMiddleware
+import logging
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from fastapi.responses import (
     Response,
@@ -24,6 +29,7 @@ from services.api.routes import (
     profiles_router,
     suppliers_router,
     users_router,
+    incidents_router,
 )
 
 
@@ -37,12 +43,37 @@ app = FastAPI(
     version="1.0.0",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 app.include_router(suppliers_router)
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(profiles_router)
+app.include_router(incidents_router)
 
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc: RequestValidationError):
+    first_error = exc.errors()[0]
+    location = first_error.get("loc", [])
+    field = str(location[-1]) if location else "unknown"
+    return JSONResponse(
+        status_code=400,
+        content={
+            "error": "validation_error",
+            "field": field,
+            "message": first_error.get("msg", "Dato inválido"),
+        },
+    )
+
+logger = logging.getLogger(__name__)
 
 LAST_ANALYSIS = None
 
@@ -187,5 +218,26 @@ def export_results(
                     "attachment; "
                     'filename="results.csv"'
                 )
+        },
+    )
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    if isinstance(exc.detail, dict):
+        return JSONResponse(status_code=exc.status_code, content=exc.detail)
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": "http_error", "message": str(exc.detail)},
+    )
+
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    logger.exception("Error inesperado en la API", exc_info=exc)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "internal_error",
+            "message": "No se pudo completar la operación",
         },
     )

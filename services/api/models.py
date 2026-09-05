@@ -5,7 +5,14 @@ from enum import Enum
 from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field, model_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
+
+from packages.shared.incidents import (
+    validate_branch,
+    validate_category,
+    validate_origin,
+    validate_status,
+)
 
 
 class SupplierCategory(str, Enum):
@@ -156,3 +163,56 @@ class ChangePasswordRequest(BaseModel):
 
 class PasswordActionResponse(BaseModel):
     message: str
+
+
+class IncidentCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=120)
+    description: str = Field(min_length=1)
+    category: str
+    status: str = Field(default="open", validate_default=True)
+    origin: str
+    branch: str
+    source_id: str | None = None
+
+    @field_validator("category")
+    @classmethod
+    def category_must_be_valid(cls, value: str) -> str:
+        return validate_category(value)
+
+    @field_validator("status")
+    @classmethod
+    def status_must_be_valid(cls, value: str) -> str:
+        return validate_status(value)
+
+    @field_validator("origin")
+    @classmethod
+    def origin_must_be_valid(cls, value: str) -> str:
+        return validate_origin(value)
+
+    @field_validator("branch")
+    @classmethod
+    def branch_must_be_valid(cls, value: str) -> str:
+        return validate_branch(value)
+
+
+class IncidentStatusUpdate(BaseModel):
+    status: str
+
+    @field_validator("status")
+    @classmethod
+    def status_must_be_valid(cls, value: str) -> str:
+        return validate_status(value)
+
+
+class Incident(IncidentCreate):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+
+class IncidentSummary(BaseModel):
+    total: int
+    by_status: dict[str, int]
+    by_category: dict[str, int]
+    by_origin: dict[str, int]
+    by_branch: dict[str, int]
