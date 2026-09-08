@@ -115,7 +115,12 @@ export default function ResetPasswordPage() {
               </div>
 
               {error ? (
-                <p className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900">{error}</p>
+                <div className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900">
+                  <p>{error}</p>
+                  <p className="mt-3">
+                    Revisa el enlace o <Link href="/forgot-password" className="font-semibold underline">solicita uno nuevo</Link>.
+                  </p>
+                </div>
               ) : null}
 
               <button

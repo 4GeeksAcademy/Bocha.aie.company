@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 
 import { requestJson } from "@/lib/api";
@@ -77,10 +78,15 @@ export default function SuppliersPage() {
   const [categoryFilter, setCategoryFilter] = useState<"" | SupplierCategory>("");
   const [loadingList, setLoadingList] = useState(true);
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const [error, setError] = useState("");
+  const [listError, setListError] = useState("");
+  const [rowError, setRowError] = useState("");
   const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
   const [formState, setFormState] = useState<SupplierFormState>(initialForm);
   const [rateDrafts, setRateDrafts] = useState<Record<number, string>>({});
+  const [savingRateId, setSavingRateId] = useState<number | null>(null);
+  const [savingStatusId, setSavingStatusId] = useState<number | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   async function fetchSuppliers(filters: { country: string; category: "" | SupplierCategory }): Promise<Supplier[]> {
     const params = new URLSearchParams();
@@ -107,7 +113,9 @@ export default function SuppliersPage() {
   }
 
   async function loadSuppliers() {
-    setError("");
+    setLoadingList(true);
+    setListError("");
+    setRowError("");
 
     try {
       const loaded = await fetchSuppliers({
@@ -124,10 +132,12 @@ export default function SuppliersPage() {
       setRateDrafts(nextDrafts);
     } catch (requestError) {
       if (requestError instanceof Error) {
-        setError(requestError.message);
+        setListError(requestError.message);
       } else {
-        setError("Ocurrió un error inesperado al cargar proveedores.");
+        setListError("No pudimos cargar el directorio de proveedores.");
       }
+    } finally {
+      setLoadingList(false);
     }
   }
 
@@ -145,7 +155,8 @@ export default function SuppliersPage() {
           return;
         }
 
-        setError("");
+        setListError("");
+        setRowError("");
         setSuppliers(loaded);
 
         const nextDrafts: Record<number, string> = {};
@@ -159,9 +170,9 @@ export default function SuppliersPage() {
         }
 
         if (requestError instanceof Error) {
-          setError(requestError.message);
+          setListError(requestError.message);
         } else {
-          setError("Ocurrió un error inesperado al cargar proveedores.");
+          setListError("No pudimos cargar el directorio de proveedores.");
         }
       } finally {
         if (active) {
@@ -175,7 +186,7 @@ export default function SuppliersPage() {
     return () => {
       active = false;
     };
-  }, [countryFilter, categoryFilter]);
+  }, [countryFilter, categoryFilter, reloadKey]);
 
   function toggleCategory(category: SupplierCategory) {
     setFormState((previous) => {
@@ -192,6 +203,7 @@ export default function SuppliersPage() {
   async function handleCreateSupplier(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFormError("");
+    setFormSuccess("");
 
     if (!formState.name.trim() || !formState.rate_per_unit.trim()) {
       setFormError("Completá nombre y tarifa.");
@@ -235,12 +247,13 @@ export default function SuppliersPage() {
       );
 
       setFormState(initialForm);
+      setFormSuccess("Proveedor registrado correctamente.");
       await loadSuppliers();
     } catch (requestError) {
       if (requestError instanceof Error) {
         setFormError(requestError.message);
       } else {
-        setFormError("Ocurrió un error inesperado al crear el proveedor.");
+        setFormError("No pudimos crear el proveedor en este momento.");
       }
     } finally {
       setLoadingCreate(false);
@@ -252,11 +265,12 @@ export default function SuppliersPage() {
     const parsed = Number(draft);
 
     if (!Number.isFinite(parsed) || parsed <= 0) {
-      setError("La tarifa debe ser un número mayor que cero.");
+      setRowError("La tarifa debe ser un número mayor que cero.");
       return;
     }
 
-    setError("");
+    setRowError("");
+    setSavingRateId(supplierId);
 
     try {
       const updated = await requestJson<Supplier>(
@@ -277,15 +291,18 @@ export default function SuppliersPage() {
       setRateDrafts((previous) => ({ ...previous, [supplierId]: updated.rate_per_unit.toString() }));
     } catch (requestError) {
       if (requestError instanceof Error) {
-        setError(requestError.message);
+        setRowError(requestError.message);
       } else {
-        setError("Ocurrió un error inesperado al actualizar tarifa.");
+        setRowError("No pudimos actualizar la tarifa.");
       }
+    } finally {
+      setSavingRateId(null);
     }
   }
 
   async function handleStatusUpdate(supplierId: number, status: SupplierStatus) {
-    setError("");
+    setRowError("");
+    setSavingStatusId(supplierId);
 
     try {
       const updated = await requestJson<Supplier>(
@@ -303,11 +320,38 @@ export default function SuppliersPage() {
       setSuppliers((previous) => previous.map((supplier) => (supplier.id === supplierId ? updated : supplier)));
     } catch (requestError) {
       if (requestError instanceof Error) {
-        setError(requestError.message);
+        setRowError(requestError.message);
       } else {
-        setError("Ocurrió un error inesperado al actualizar estado.");
+        setRowError("No pudimos actualizar el estado del proveedor.");
       }
+    } finally {
+      setSavingStatusId(null);
     }
+  }
+
+  function ErrorBlock({
+    message,
+    onRetry,
+    secondaryAction,
+  }: {
+    message: string;
+    onRetry?: () => void;
+    secondaryAction?: React.ReactNode;
+  }) {
+    return (
+      <div className="error">
+        <p>{message}</p>
+        <div>
+          {onRetry ? (
+            <button type="button" onClick={onRetry}>
+              Reintentar
+            </button>
+          ) : null}
+          {onRetry && secondaryAction ? <span> </span> : null}
+          {secondaryAction}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -430,7 +474,13 @@ export default function SuppliersPage() {
           </button>
         </form>
 
-        {formError && <p className="error">{formError}</p>}
+        {formError ? (
+          <ErrorBlock
+            message={formError}
+            secondaryAction={<Link href="/">Volver al inicio</Link>}
+          />
+        ) : null}
+        {formSuccess ? <p className="successMessage">{formSuccess}</p> : null}
       </section>
 
       <section className="card">
@@ -476,13 +526,26 @@ export default function SuppliersPage() {
       <section className="card">
         <h2>Listado de proveedores</h2>
 
-        {error && <p className="error">{error}</p>}
+        {listError ? (
+          <ErrorBlock
+            message={listError}
+            onRetry={() => setReloadKey((current) => current + 1)}
+            secondaryAction={<button type="button" onClick={() => { setCountryFilter(""); setCategoryFilter(""); }}>Limpiar filtros</button>}
+          />
+        ) : null}
+
+        {rowError ? (
+          <ErrorBlock
+            message={rowError}
+            secondaryAction={<Link href="/">Volver al inicio</Link>}
+          />
+        ) : null}
 
         {loadingList ? (
           <p>Cargando proveedores...</p>
-        ) : suppliers.length === 0 ? (
+        ) : !listError && suppliers.length === 0 ? (
           <p>No hay proveedores para los filtros seleccionados.</p>
-        ) : (
+        ) : !listError ? (
           <div className="tableWrapper">
             <table className="suppliersTable">
               <thead>
@@ -513,13 +576,18 @@ export default function SuppliersPage() {
                           min="0.01"
                           step="0.01"
                           value={rateDrafts[supplier.id] ?? ""}
+                          disabled={savingRateId === supplier.id}
                           onChange={(event) => {
                             const value = event.target.value;
                             setRateDrafts((previous) => ({ ...previous, [supplier.id]: value }));
                           }}
                         />
-                        <button type="button" onClick={() => void handleRateUpdate(supplier.id)}>
-                          Guardar
+                        <button
+                          type="button"
+                          disabled={savingRateId === supplier.id}
+                          onClick={() => void handleRateUpdate(supplier.id)}
+                        >
+                          {savingRateId === supplier.id ? "Guardando..." : "Guardar"}
                         </button>
                       </div>
                     </td>
@@ -531,6 +599,7 @@ export default function SuppliersPage() {
                         </span>
                         <select
                           value={supplier.status}
+                          disabled={savingStatusId === supplier.id}
                           onChange={(event) => void handleStatusUpdate(supplier.id, event.target.value as SupplierStatus)}
                         >
                           {STATUS_OPTIONS.map((status) => (
@@ -548,7 +617,7 @@ export default function SuppliersPage() {
               </tbody>
             </table>
           </div>
-        )}
+        ) : null}
       </section>
     </main>
   );

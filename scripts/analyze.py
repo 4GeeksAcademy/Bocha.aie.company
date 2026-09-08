@@ -50,11 +50,45 @@ def main():
     )
 
 
+    if not args.csv_file.strip():
+
+        print(
+            "Error: debes indicar "
+            "la ruta de un fichero CSV",
+            file=sys.stderr,
+        )
+
+        sys.exit(1)
+
+
     if not csv_path.exists():
 
         print(
             "Error: no existe "
-            f"el fichero {csv_path}"
+            f"el fichero {csv_path}",
+            file=sys.stderr,
+        )
+
+        sys.exit(1)
+
+
+    if not csv_path.is_file():
+
+        print(
+            "Error: la ruta indicada "
+            "no es un fichero válido",
+            file=sys.stderr,
+        )
+
+        sys.exit(1)
+
+
+    if csv_path.suffix.lower() != ".csv":
+
+        print(
+            "Error: el fichero de entrada "
+            "debe tener extensión .csv",
+            file=sys.stderr,
         )
 
         sys.exit(1)
@@ -86,7 +120,8 @@ def main():
     ) as error:
 
         print(
-            f"Error: {error}"
+            f"Error: {error}",
+            file=sys.stderr,
         )
 
         sys.exit(1)
@@ -103,11 +138,23 @@ def main():
     print()
 
 
-    answer = input(
-        "¿Deseas exportar "
-        "los resultados a CSV? "
-        "[s / n]: "
-    ).strip().lower()
+    try:
+
+        answer = input(
+            "¿Deseas exportar "
+            "los resultados a CSV? "
+            "[s / n]: "
+        ).strip().lower()
+
+    except EOFError:
+
+        print(
+            "Error: no se pudo leer "
+            "la respuesta para exportar el CSV",
+            file=sys.stderr,
+        )
+
+        sys.exit(1)
 
 
     if answer in {
@@ -123,15 +170,27 @@ def main():
         )
 
 
-        result_path.write_text(
+        try:
 
-            summary_to_csv(
-                summary
-            ),
+            result_path.write_text(
 
-            encoding="utf-8",
+                summary_to_csv(
+                    summary
+                ),
 
-        )
+                encoding="utf-8",
+
+            )
+
+        except OSError as error:
+
+            print(
+                "Error: no se pudieron "
+                f"guardar los resultados: {error}",
+                file=sys.stderr,
+            )
+
+            sys.exit(1)
 
 
         print(

@@ -22,12 +22,48 @@ type ApiErrorPayload = {
   message?: string;
 };
 
+const NETWORK_ERROR_MESSAGE =
+  "No pudimos comunicarnos con el tracker. Revisa tu conexión e inténtalo de nuevo.";
+
 function normalizeCandidateInput(input: CandidateRecordInput) {
   return {
     ...input,
     linkedin_url: input.linkedin_url.trim() || null,
     cv_url: input.cv_url.trim() || null,
   };
+}
+
+function normalizeUserFacingMessage(message: string | null | undefined, fallback: string) {
+  const normalizedMessage = message?.trim();
+
+  if (!normalizedMessage) {
+    return fallback;
+  }
+
+  const lowerCaseMessage = normalizedMessage.toLowerCase();
+
+  if (
+    lowerCaseMessage.includes("failed to fetch")
+    || lowerCaseMessage.includes("networkerror")
+    || lowerCaseMessage.includes("network request failed")
+    || lowerCaseMessage.includes("load failed")
+  ) {
+    return NETWORK_ERROR_MESSAGE;
+  }
+
+  if (
+    lowerCaseMessage.includes("unexpected token")
+    || normalizedMessage.startsWith("<!DOCTYPE")
+    || normalizedMessage.startsWith("<html")
+  ) {
+    return fallback;
+  }
+
+  if (lowerCaseMessage.includes("internal server error")) {
+    return "El tracker tuvo un problema al procesar la solicitud. Inténtalo de nuevo.";
+  }
+
+  return normalizedMessage;
 }
 
 async function parseJsonSafely(response: Response) {
@@ -45,6 +81,10 @@ async function parseJsonSafely(response: Response) {
 }
 
 function buildErrorMessage(payload: unknown, fallback: string) {
+  if (typeof payload === "string") {
+    return normalizeUserFacingMessage(payload, fallback);
+  }
+
   if (!payload || typeof payload !== "object") {
     return fallback;
   }
@@ -52,19 +92,19 @@ function buildErrorMessage(payload: unknown, fallback: string) {
   const apiError = payload as ApiErrorPayload;
 
   if (typeof apiError.error === "string") {
-    return apiError.error;
+    return normalizeUserFacingMessage(apiError.error, fallback);
   }
 
   if (typeof apiError.message === "string") {
-    return apiError.message;
+    return normalizeUserFacingMessage(apiError.message, fallback);
   }
 
   if (typeof apiError.detail === "string") {
-    return apiError.detail;
+    return normalizeUserFacingMessage(apiError.detail, fallback);
   }
 
   if (Array.isArray(apiError.detail) && apiError.detail[0]?.msg) {
-    return apiError.detail[0].msg;
+    return normalizeUserFacingMessage(apiError.detail[0].msg, fallback);
   }
 
   return fallback;
@@ -85,11 +125,23 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     headers.set("Content-Type", "application/json");
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    headers,
-    cache: "no-store",
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      headers,
+      cache: "no-store",
+    });
+  } catch (error) {
+    throw new ApiRequestError(
+      normalizeUserFacingMessage(
+        error instanceof Error ? error.message : null,
+        NETWORK_ERROR_MESSAGE
+      ),
+      0
+    );
+  }
 
   if (response.status === 401) {
     resetSessionAndRedirect();

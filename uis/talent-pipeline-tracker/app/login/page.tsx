@@ -106,7 +106,12 @@ export default function LoginPage() {
             </div>
 
             {error ? (
-              <p className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900">{error}</p>
+              <div className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900">
+                <p>{error}</p>
+                <p className="mt-3 text-sm text-rose-900">
+                  Verifica tus credenciales o <Link href="/forgot-password" className="font-semibold underline">restablece tu contraseña</Link>.
+                </p>
+              </div>
             ) : null}
 
             <button

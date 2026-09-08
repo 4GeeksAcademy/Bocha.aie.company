@@ -9,15 +9,53 @@ import { getAccessToken, resetSessionAndRedirect } from "@/lib/auth";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "/backend";
 
+const NETWORK_ERROR_MESSAGE =
+  "No pudimos comunicarnos con el centro de incidencias. Revisa tu conexión e inténtalo de nuevo.";
+
 type ApiError = { message?: string; detail?: string; error?: string };
 
 export class IncidentApiError extends Error {
   field?: string;
-  constructor(message: string, field?: string) {
+  status?: number;
+  constructor(message: string, field?: string, status?: number) {
     super(message);
     this.name = "IncidentApiError";
     this.field = field;
+    this.status = status;
   }
+}
+
+function normalizeUserFacingMessage(message: string | null | undefined, fallbackMessage: string) {
+  const normalizedMessage = message?.trim();
+
+  if (!normalizedMessage) {
+    return fallbackMessage;
+  }
+
+  const lowerCaseMessage = normalizedMessage.toLowerCase();
+
+  if (
+    lowerCaseMessage.includes("failed to fetch")
+    || lowerCaseMessage.includes("networkerror")
+    || lowerCaseMessage.includes("network request failed")
+    || lowerCaseMessage.includes("load failed")
+  ) {
+    return NETWORK_ERROR_MESSAGE;
+  }
+
+  if (
+    lowerCaseMessage.includes("unexpected token")
+    || normalizedMessage.startsWith("<!DOCTYPE")
+    || normalizedMessage.startsWith("<html")
+  ) {
+    return fallbackMessage;
+  }
+
+  if (lowerCaseMessage.includes("internal server error")) {
+    return "El servidor tuvo un problema al procesar la incidencia. Inténtalo de nuevo.";
+  }
+
+  return normalizedMessage;
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -31,20 +69,37 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   headers.set("Authorization", `Bearer ${token}`);
   if (init?.body) headers.set("Content-Type", "application/json");
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    headers,
-    cache: "no-store",
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      headers,
+      cache: "no-store",
+    });
+  } catch (error) {
+    throw new IncidentApiError(
+      normalizeUserFacingMessage(
+        error instanceof Error ? error.message : null,
+        NETWORK_ERROR_MESSAGE
+      )
+    );
+  }
+
   const payload = (await response.json().catch(() => null)) as ApiError | T | null;
   if (response.status === 401) {
     resetSessionAndRedirect();
+    throw new IncidentApiError("Tu sesión expiró. Inicia sesión de nuevo.", undefined, 401);
   }
   if (!response.ok) {
     const error = payload as ApiError | null;
     throw new IncidentApiError(
-      error?.message ?? error?.detail ?? "No se pudo completar la operación.",
+      normalizeUserFacingMessage(
+        error?.message ?? error?.detail ?? error?.error,
+        "No se pudo completar la operación."
+      ),
       (error as ApiError & { field?: string } | null)?.field,
+      response.status,
     );
   }
   return payload as T;

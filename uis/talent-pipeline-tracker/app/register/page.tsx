@@ -206,7 +206,12 @@ export default function RegisterPage() {
             </div>
 
             {error ? (
-              <p className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900 md:col-span-2">{error}</p>
+              <div className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900 md:col-span-2">
+                <p>{error}</p>
+                <p className="mt-3">
+                  Revisa los datos del formulario o <Link href="/login" className="font-semibold underline">vuelve al login</Link>.
+                </p>
+              </div>
             ) : null}
 
             <div className="md:col-span-2">

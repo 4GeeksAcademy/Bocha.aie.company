@@ -88,7 +88,14 @@ export default function LoginPage() {
             />
           </label>
 
-          {error ? <p className="error authMessage">{error}</p> : null}
+          {error ? (
+            <>
+              <p className="error authMessage">{error}</p>
+              <p className="authFooter">
+                Verifica tus credenciales o <Link href="/forgot-password">restablece tu contraseña</Link>.
+              </p>
+            </>
+          ) : null}
 
           <button type="submit" disabled={loading}>
             {loading ? "Ingresando..." : "Iniciar sesión"}

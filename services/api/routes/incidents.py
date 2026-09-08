@@ -43,7 +43,7 @@ def _validate_payload(payload: IncidentCreate) -> None:
 
 def _validation_error(field: str, message: str) -> HTTPException:
     return HTTPException(
-        status_code=400,
+        status_code=422,
         detail={"error": "validation_error", "field": field, "message": message},
     )
 
@@ -123,7 +123,7 @@ def update_incident_status(incident_id: int, payload: IncidentStatusUpdate) -> I
         next_status = validate_transition(document["status"], payload.status)
     except ValueError as error:
         raise HTTPException(
-            status_code=400,
+            status_code=422,
             detail={
                 "error": "invalid_status_transition",
                 "field": "status",

@@ -1,6 +1,8 @@
 "use client";
 
 
+import Link from "next/link";
+
 import {
   useState
 } from "react";
@@ -110,17 +112,30 @@ export default function IncidentsPage() {
   ] = useState(false);
 
 
-  async function handleSubmit(
+  const [
+    downloading,
+    setDownloading,
+  ] = useState(false);
 
-    event:
-      FormEvent<HTMLFormElement>
 
-  ) {
+  const [
+    failedAction,
+    setFailedAction,
+  ] = useState<
+    "analyze"
+    | "download"
+    | null
+  >(null);
 
-    event.preventDefault();
+
+  async function analyzeSelectedFile() {
 
 
     if (!file) {
+
+      setFailedAction(
+        "analyze"
+      );
 
       setError(
         "Seleccioná un archivo CSV."
@@ -132,6 +147,10 @@ export default function IncidentsPage() {
 
 
     setLoading(true);
+
+    setFailedAction(
+      "analyze"
+    );
 
     setError("");
 
@@ -196,7 +215,7 @@ export default function IncidentsPage() {
       } else {
 
         setError(
-          "Ocurrió un error inesperado."
+          "No pudimos analizar el archivo en este momento."
         );
 
       }
@@ -211,8 +230,29 @@ export default function IncidentsPage() {
   }
 
 
+  async function handleSubmit(
+
+    event:
+      FormEvent<HTMLFormElement>
+
+  ) {
+
+    event.preventDefault();
+
+
+    await analyzeSelectedFile();
+
+  }
+
+
   async function downloadResults() {
 
+
+    setDownloading(true);
+
+    setFailedAction(
+      "download"
+    );
 
     setError("");
 
@@ -292,11 +332,70 @@ export default function IncidentsPage() {
           error.message
         );
 
+      } else {
+
+        setError(
+          "No pudimos descargar los resultados en este momento."
+        );
+
       }
+
+    } finally {
+
+      setDownloading(false);
 
     }
 
   }
+
+
+  function retryFailedAction() {
+
+
+    if (
+      failedAction
+      === "download"
+    ) {
+
+      void downloadResults();
+
+      return;
+
+    }
+
+
+    void analyzeSelectedFile();
+
+  }
+
+
+  const invalidBreakdown =
+    result
+      ?.invalid_breakdown
+    ?? {};
+
+
+  const byCategory =
+    result
+      ?.by_category
+    ?? {};
+
+
+  const byStatus =
+    result
+      ?.by_status
+    ?? {};
+
+
+  const satisfaction =
+    result
+      ?.satisfaction;
+
+
+  const satisfactionScores =
+    satisfaction
+      ?.scores
+    ?? {};
 
 
   return (
@@ -412,7 +511,27 @@ export default function IncidentsPage() {
 
             <div className="error">
 
-              {error}
+              <p>
+                {error}
+              </p>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    retryFailedAction();
+                  }}
+                  disabled={loading || downloading}
+                >
+                  Reintentar
+                </button>
+                <span>
+                  {" "}
+                </span>
+                <Link href="/">
+                  Volver al inicio
+                </Link>
+              </div>
 
             </div>
 
@@ -492,7 +611,7 @@ export default function IncidentsPage() {
                   {
                     result
                       .satisfaction
-                      .average
+                      ?.average
                       ?.toFixed(2)
                     ?? "N/A"
                   }
@@ -515,8 +634,7 @@ export default function IncidentsPage() {
 
               {
                 Object.keys(
-                  result
-                    .invalid_breakdown
+                  invalidBreakdown
                 ).length === 0
 
                 ? (
@@ -536,8 +654,7 @@ export default function IncidentsPage() {
                     {
                       Object.entries(
 
-                        result
-                          .invalid_breakdown
+                        invalidBreakdown
 
                       ).map(
                         ([
@@ -588,8 +705,7 @@ export default function IncidentsPage() {
                   {
                     Object.entries(
 
-                      result
-                        .by_category
+                      byCategory
 
                     ).map(
                       ([
@@ -646,8 +762,7 @@ export default function IncidentsPage() {
                   {
                     Object.entries(
 
-                      result
-                        .by_status
+                      byStatus
 
                     ).map(
                       ([
@@ -712,9 +827,9 @@ export default function IncidentsPage() {
 
                   <strong>
                     {
-                      result
-                        .satisfaction
-                        .closed_cases
+                      satisfaction
+                        ?.closed_cases
+                      ?? 0
                     }
                   </strong>
 
@@ -729,9 +844,9 @@ export default function IncidentsPage() {
 
                   <strong>
                     {
-                      result
-                        .satisfaction
-                        .scored_cases
+                      satisfaction
+                        ?.scored_cases
+                      ?? 0
                     }
                   </strong>
 
@@ -747,9 +862,8 @@ export default function IncidentsPage() {
                   <strong>
 
                     {
-                      result
-                        .satisfaction
-                        .average
+                      satisfaction
+                        ?.average
                         ?.toFixed(2)
                       ?? "N/A"
                     }
@@ -773,9 +887,7 @@ export default function IncidentsPage() {
                 {
                   Object.entries(
 
-                    result
-                      .satisfaction
-                      .scores
+                    satisfactionScores
 
                   ).map(
                     ([
@@ -805,13 +917,18 @@ export default function IncidentsPage() {
 
               <button
                 type="button"
-                onClick={
-                  downloadResults
-                }
+                onClick={() => {
+                  void downloadResults();
+                }}
                 className="downloadButton"
+                disabled={downloading}
               >
 
-                Descargar resultados CSV
+                {
+                  downloading
+                  ? "Descargando..."
+                  : "Descargar resultados CSV"
+                }
 
               </button>
 

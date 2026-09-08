@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { FieldLabel, SectionCard } from "@/components/ui";
+import { ErrorState, FieldLabel, SectionCard } from "@/components/ui";
 import { requestAuthJson } from "@/lib/auth";
 
 type AuthMeResponse = {
@@ -41,6 +42,7 @@ export default function AccountProfilePage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let ignore = false;
@@ -90,7 +92,7 @@ export default function AccountProfilePage() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [reloadKey]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -130,6 +132,22 @@ export default function AccountProfilePage() {
     } finally {
       setSaving(false);
     }
+  }
+
+  if (!loading && error && !email) {
+    return (
+      <main className="tracker-grid min-h-screen px-4 py-6 md:px-8 md:py-8">
+        <div className="tracker-shell mx-auto flex w-full max-w-5xl flex-col gap-6 rounded-[32px] border border-white/60 p-4 md:p-6">
+          <SectionCard>
+            <ErrorState
+              message={error}
+              onRetry={() => setReloadKey((current) => current + 1)}
+              secondaryAction={<Link href="/" className="font-semibold underline">Volver al inicio</Link>}
+            />
+          </SectionCard>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -197,7 +215,12 @@ export default function AccountProfilePage() {
                 </div>
 
                 {error ? (
-                  <p className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900 md:col-span-2">{error}</p>
+                  <div className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900 md:col-span-2">
+                    <p>{error}</p>
+                    <p className="mt-3">
+                      Revisa los datos o <Link href="/" className="font-semibold underline">vuelve al inicio</Link>.
+                    </p>
+                  </div>
                 ) : null}
 
                 {feedback ? (

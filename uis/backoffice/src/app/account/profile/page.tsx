@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { requestJson } from "@/lib/api";
@@ -38,15 +39,17 @@ export default function AccountProfilePage() {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [saveError, setSaveError] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let active = true;
 
     async function loadProfile() {
       setLoading(true);
-      setError("");
+      setLoadError("");
 
       try {
         const response = await requestJson<AuthMeResponse>(
@@ -75,9 +78,9 @@ export default function AccountProfilePage() {
         }
 
         if (requestError instanceof Error) {
-          setError(requestError.message);
+          setLoadError(requestError.message);
         } else {
-          setError("Ocurrió un error inesperado al cargar el perfil.");
+          setLoadError("No pudimos cargar tu perfil en este momento.");
         }
       } finally {
         if (active) {
@@ -91,12 +94,12 @@ export default function AccountProfilePage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [reloadKey]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
-    setError("");
+    setSaveError("");
     setFeedback("");
 
     try {
@@ -124,9 +127,9 @@ export default function AccountProfilePage() {
       setFeedback("Perfil actualizado correctamente.");
     } catch (requestError) {
       if (requestError instanceof Error) {
-        setError(requestError.message);
+        setSaveError(requestError.message);
       } else {
-        setError("Ocurrió un error inesperado al guardar el perfil.");
+        setSaveError("No pudimos guardar los cambios del perfil.");
       }
     } finally {
       setSaving(false);
@@ -138,6 +141,24 @@ export default function AccountProfilePage() {
       <main className="container">
         <section className="card">
           <p>Cargando tu perfil...</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <main className="container">
+        <section className="card">
+          <p className="error authMessage">{loadError}</p>
+          <p>
+            <button type="button" onClick={() => setReloadKey((current) => current + 1)}>
+              Reintentar
+            </button>
+          </p>
+          <p className="authFooter">
+            <Link href="/">Volver al inicio</Link>
+          </p>
         </section>
       </main>
     );
@@ -193,7 +214,14 @@ export default function AccountProfilePage() {
             />
           </label>
 
-          {error ? <p className="error authMessage fullWidthField">{error}</p> : null}
+          {saveError ? (
+            <>
+              <p className="error authMessage fullWidthField">{saveError}</p>
+              <p className="authFooter fullWidthField">
+                Revisa los datos o <Link href="/">vuelve al inicio</Link>.
+              </p>
+            </>
+          ) : null}
           {feedback ? <p className="successMessage fullWidthField">{feedback}</p> : null}
 
           <div className="fullWidthField">

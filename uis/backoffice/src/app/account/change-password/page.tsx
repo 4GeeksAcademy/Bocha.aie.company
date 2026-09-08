@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { ApiRequestError, requestJson } from "@/lib/api";
@@ -104,7 +105,14 @@ export default function ChangePasswordPage() {
             />
           </label>
 
-          {error ? <p className="error authMessage fullWidthField">{error}</p> : null}
+          {error ? (
+            <>
+              <p className="error authMessage fullWidthField">{error}</p>
+              <p className="authFooter fullWidthField">
+                Verifica la contraseña actual o <Link href="/account/profile">vuelve a tu perfil</Link>.
+              </p>
+            </>
+          ) : null}
           {feedback ? <p className="successMessage fullWidthField">{feedback}</p> : null}
 
           <div className="fullWidthField">
