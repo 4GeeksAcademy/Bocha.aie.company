@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { CandidateForm } from "@/components/candidate-form";
-import { FieldLabel, SectionCard, StatusPill } from "@/components/ui";
+import { ErrorState, FieldLabel, SectionCard, StatusPill } from "@/components/ui";
 import {
   createNote,
   deleteNote,
@@ -67,6 +67,7 @@ export function CandidateDetailPage({ candidateId }: CandidateDetailPageProps) {
   const [noteSaving, setNoteSaving] = useState(false);
   const [noteFeedback, setNoteFeedback] = useState<string | null>(null);
   const [recordFeedback, setRecordFeedback] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   const backHref = useMemo(() => {
     const query = searchParams.toString();
@@ -132,7 +133,7 @@ export function CandidateDetailPage({ candidateId }: CandidateDetailPageProps) {
     return () => {
       ignore = true;
     };
-  }, [candidateId]);
+  }, [candidateId, reloadKey]);
 
   async function handlePatch(update: { status?: CandidateRecord["status"]; stage?: CandidateRecord["stage"] }) {
     const updatedCandidate = await patchRecord(candidateId, update);
@@ -254,8 +255,12 @@ export function CandidateDetailPage({ candidateId }: CandidateDetailPageProps) {
           <Link href={backHref} className="text-sm font-semibold text-[color:var(--accent-strong)]">
             Volver al tablero
           </Link>
-          <SectionCard className="bg-rose-100 text-rose-900">
-            {error ?? "No se encontró la candidatura solicitada."}
+          <SectionCard>
+            <ErrorState
+              message={error ?? "No se encontró la candidatura solicitada."}
+              onRetry={() => setReloadKey((current) => current + 1)}
+              secondaryAction={<Link href="/" className="underline">Volver al inicio</Link>}
+            />
           </SectionCard>
         </div>
       </main>
@@ -371,9 +376,19 @@ export function CandidateDetailPage({ candidateId }: CandidateDetailPageProps) {
             </div>
 
             {recordFeedback ? (
-              <p className="rounded-2xl bg-stone-100 px-4 py-3 text-sm text-stone-700">
-                {recordFeedback}
-              </p>
+              <div
+                className={[
+                  "rounded-2xl px-4 py-3 text-sm",
+                  recordFeedback.toLowerCase().includes("correctamente")
+                    ? "bg-stone-100 text-stone-700"
+                    : "bg-rose-100 text-rose-900",
+                ].join(" ")}
+              >
+                <p>{recordFeedback}</p>
+                {!recordFeedback.toLowerCase().includes("correctamente") ? (
+                  <p className="mt-3 font-semibold">Reintenta la actualización o vuelve al tablero.</p>
+                ) : null}
+              </div>
             ) : null}
           </SectionCard>
 
@@ -447,9 +462,19 @@ export function CandidateDetailPage({ candidateId }: CandidateDetailPageProps) {
               </div>
 
               {noteFeedback ? (
-                <p className="rounded-2xl bg-stone-100 px-4 py-3 text-sm text-stone-700">
-                  {noteFeedback}
-                </p>
+                <div
+                  className={[
+                    "rounded-2xl px-4 py-3 text-sm",
+                    noteFeedback.toLowerCase().includes("no se pudo")
+                      ? "bg-rose-100 text-rose-900"
+                      : "bg-stone-100 text-stone-700",
+                  ].join(" ")}
+                >
+                  <p>{noteFeedback}</p>
+                  {noteFeedback.toLowerCase().includes("no se pudo") ? (
+                    <p className="mt-3 font-semibold">Reintenta la operación o vuelve a cargar la candidatura.</p>
+                  ) : null}
+                </div>
               ) : null}
 
               <button
@@ -462,7 +487,13 @@ export function CandidateDetailPage({ candidateId }: CandidateDetailPageProps) {
             </form>
 
             {notesLoading ? <p className="text-sm text-stone-600">Cargando notas...</p> : null}
-            {notesError ? <p className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900">{notesError}</p> : null}
+            {notesError ? (
+              <ErrorState
+                message={notesError}
+                onRetry={() => setReloadKey((current) => current + 1)}
+                secondaryAction={<Link href="/" className="underline">Volver al inicio</Link>}
+              />
+            ) : null}
 
             {!notesLoading && !notesError ? (
               <div className="space-y-3">

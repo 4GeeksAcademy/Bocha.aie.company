@@ -171,7 +171,14 @@ export default function RegisterPage() {
             {fieldError("profile.address") ? <small className="fieldError">{fieldError("profile.address")}</small> : null}
           </label>
 
-          {error ? <p className="error authMessage">{error}</p> : null}
+          {error ? (
+            <>
+              <p className="error authMessage">{error}</p>
+              <p className="authFooter">
+                Revisa los datos del formulario o <Link href="/login">vuelve al login</Link>.
+              </p>
+            </>
+          ) : null}
 
           <button type="submit" disabled={loading}>
             {loading ? "Creando cuenta..." : "Registrarme"}

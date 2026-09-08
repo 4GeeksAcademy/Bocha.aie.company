@@ -83,29 +83,53 @@ def transform_row(row: dict[str, str]) -> dict[str, str]:
 
 
 def seed(csv_path: Path = CSV_PATH) -> tuple[int, int, list[dict[str, object]]]:
+    if not csv_path.exists():
+        raise FileNotFoundError(f"No existe el fichero CSV: {csv_path}")
+
+    if not csv_path.is_file():
+        raise ValueError(f"La ruta indicada no es un fichero: {csv_path}")
+
+    if csv_path.suffix.lower() != ".csv":
+        raise ValueError("El fichero de entrada debe tener extensión .csv")
+
     table = get_incidents_table()
     inserted = 0
     skipped = 0
     invalid: list[dict[str, object]] = []
 
-    with csv_path.open(newline="", encoding="utf-8-sig") as handle:
-        reader = csv.DictReader(handle)
-        for line_number, row in enumerate(reader, start=2):
-            try:
-                data = transform_row(row)
-                if table.search(lambda document: document.get("source_id") == data["source_id"]):
-                    skipped += 1
-                    continue
-                table.insert(data)
-                inserted += 1
-            except (ValueError, TypeError) as error:
-                invalid.append({"line": line_number, "error": str(error)})
+    try:
+        with csv_path.open(newline="", encoding="utf-8-sig") as handle:
+            reader = csv.DictReader(handle)
+
+            if not reader.fieldnames:
+                raise ValueError("El CSV no contiene cabeceras válidas")
+
+            for line_number, row in enumerate(reader, start=2):
+                try:
+                    if row is None:
+                        raise ValueError("fila vacía o malformada")
+
+                    data = transform_row(row)
+                    if table.search(lambda document: document.get("source_id") == data["source_id"]):
+                        skipped += 1
+                        continue
+                    table.insert(data)
+                    inserted += 1
+                except (ValueError, TypeError) as error:
+                    invalid.append({"line": line_number, "error": str(error)})
+    except (OSError, csv.Error) as error:
+        raise RuntimeError(f"No se pudo leer o procesar el CSV: {error}") from error
 
     return inserted, skipped, invalid
 
 
 if __name__ == "__main__":
-    inserted_count, skipped_count, invalid_rows = seed()
+    try:
+        inserted_count, skipped_count, invalid_rows = seed()
+    except (OSError, RuntimeError, ValueError) as error:
+        print(f"Error: {error}", file=sys.stderr)
+        sys.exit(1)
+
     print("Seed terminado")
     print(f"Insertadas: {inserted_count}")
     print(f"Omitidas por existir: {skipped_count}")

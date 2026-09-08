@@ -97,7 +97,14 @@ export default function ResetPasswordPage() {
               />
             </label>
 
-            {error ? <p className="error authMessage">{error}</p> : null}
+            {error ? (
+              <>
+                <p className="error authMessage">{error}</p>
+                <p className="authFooter">
+                  Revisa el enlace o <Link href="/forgot-password">solicita uno nuevo</Link>.
+                </p>
+              </>
+            ) : null}
 
             <button type="submit" disabled={loading}>
               {loading ? "Guardando..." : "Restablecer contraseña"}

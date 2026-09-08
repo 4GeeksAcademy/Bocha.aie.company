@@ -14,6 +14,7 @@ from services.api.auth import (
     verify_password,
 )
 from services.api.email_service import send_password_reset_email
+from services.api.email_service import EmailDeliveryError
 from services.api.models import (
     AuthMeResponse,
     ChangePasswordRequest,
@@ -89,8 +90,8 @@ def forgot_password(payload: ForgotPasswordRequest, request: Request) -> Passwor
                 build_reset_url(raw_token),
                 get_reset_token_expire_minutes(),
             )
-        except Exception:
-            logger.exception("No se pudo enviar el email de reseteo de contraseña")
+        except EmailDeliveryError:
+            logger.warning("No se pudo enviar el email de reseteo de contraseña")
 
     return PasswordActionResponse(message=GENERIC_FORGOT_PASSWORD_MESSAGE)
 

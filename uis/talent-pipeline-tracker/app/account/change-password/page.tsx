@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { SectionCard, FieldLabel } from "@/components/ui";
@@ -120,7 +121,12 @@ export default function ChangePasswordPage() {
             </div>
 
             {error ? (
-              <p className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900">{error}</p>
+              <div className="rounded-2xl bg-rose-100 px-4 py-3 text-sm text-rose-900">
+                <p>{error}</p>
+                <p className="mt-3">
+                  Verifica la contraseña actual o <Link href="/account/profile" className="font-semibold underline">vuelve a tu perfil</Link>.
+                </p>
+              </div>
             ) : null}
             {feedback ? (
               <p className="rounded-2xl bg-emerald-100 px-4 py-3 text-sm text-emerald-900">{feedback}</p>

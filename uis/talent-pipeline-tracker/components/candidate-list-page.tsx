@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { CandidateForm } from "@/components/candidate-form";
-import { SectionCard, StatusPill } from "@/components/ui";
+import { ErrorState, SectionCard, StatusPill } from "@/components/ui";
 import { createRecord, getRecords } from "@/lib/tracker-api";
 import { stageOptions, statusOptions, type CandidateRecord } from "@/types/tracker";
 
@@ -214,9 +214,11 @@ export function CandidateListPage() {
               ) : null}
 
               {!loading && error ? (
-                <div className="rounded-[24px] bg-rose-100 px-5 py-6 text-rose-900">
-                  {error}
-                </div>
+                <ErrorState
+                  message={error}
+                  onRetry={() => setRefreshIndex((current) => current + 1)}
+                  secondaryAction={<Link href="/" className="underline">Volver al inicio</Link>}
+                />
               ) : null}
 
               {!loading && !error ? (

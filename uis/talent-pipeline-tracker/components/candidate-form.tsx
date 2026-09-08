@@ -199,7 +199,7 @@ export function CandidateForm({
       </div>
 
       {feedback ? (
-        <p
+        <div
           className={[
             "rounded-2xl px-4 py-3 text-sm",
             feedback.type === "success"
@@ -207,8 +207,11 @@ export function CandidateForm({
               : "bg-rose-100 text-rose-900",
           ].join(" ")}
         >
-          {feedback.text}
-        </p>
+          <p>{feedback.text}</p>
+          {feedback.type === "error" ? (
+            <p className="mt-3 font-semibold">Corrige los campos indicados o inténtalo de nuevo.</p>
+          ) : null}
+        </div>
       ) : null}
 
       <button

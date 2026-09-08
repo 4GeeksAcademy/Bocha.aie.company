@@ -66,7 +66,14 @@ export default function ForgotPasswordPage() {
             />
           </label>
 
-          {error ? <p className="error authMessage">{error}</p> : null}
+          {error ? (
+            <>
+              <p className="error authMessage">{error}</p>
+              <p className="authFooter">
+                Confirma el email e inténtalo otra vez o <Link href="/login">vuelve al login</Link>.
+              </p>
+            </>
+          ) : null}
           {feedback ? <p className="successMessage">{feedback}</p> : null}
 
           <button type="submit" disabled={loading || submitted}>

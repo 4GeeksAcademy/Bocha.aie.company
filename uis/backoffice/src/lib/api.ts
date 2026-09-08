@@ -15,6 +15,9 @@ type RequestOptions = {
   fallbackMessage?: string;
 };
 
+const NETWORK_ERROR_MESSAGE =
+  "No pudimos comunicarnos con el servicio. Revisa tu conexión e inténtalo de nuevo.";
+
 export class ApiRequestError extends Error {
   status: number;
   fieldErrors: Record<string, string>;
@@ -25,6 +28,39 @@ export class ApiRequestError extends Error {
     this.status = status;
     this.fieldErrors = fieldErrors;
   }
+}
+
+function normalizeUserFacingMessage(message: string | null | undefined, fallbackMessage: string): string {
+  const normalizedMessage = message?.trim();
+
+  if (!normalizedMessage) {
+    return fallbackMessage;
+  }
+
+  const lowerCaseMessage = normalizedMessage.toLowerCase();
+
+  if (
+    lowerCaseMessage.includes("failed to fetch")
+    || lowerCaseMessage.includes("networkerror")
+    || lowerCaseMessage.includes("network request failed")
+    || lowerCaseMessage.includes("load failed")
+  ) {
+    return NETWORK_ERROR_MESSAGE;
+  }
+
+  if (
+    lowerCaseMessage.includes("unexpected token")
+    || normalizedMessage.startsWith("<!DOCTYPE")
+    || normalizedMessage.startsWith("<html")
+  ) {
+    return fallbackMessage;
+  }
+
+  if (lowerCaseMessage.includes("internal server error")) {
+    return "El servidor tuvo un problema al procesar la solicitud. Inténtalo de nuevo.";
+  }
+
+  return normalizedMessage;
 }
 
 function normalizeFieldPath(path: Array<string | number> | undefined): string | null {
@@ -62,6 +98,13 @@ async function parseJsonSafely(response: Response): Promise<unknown> {
 }
 
 function buildApiError(payload: unknown, status: number, fallbackMessage: string): ApiRequestError {
+  if (typeof payload === "string") {
+    return new ApiRequestError(
+      normalizeUserFacingMessage(payload, fallbackMessage),
+      status
+    );
+  }
+
   if (!payload || typeof payload !== "object") {
     return new ApiRequestError(fallbackMessage, status);
   }
@@ -88,15 +131,27 @@ function buildApiError(payload: unknown, status: number, fallbackMessage: string
   }
 
   if (typeof apiPayload.detail === "string") {
-    return new ApiRequestError(apiPayload.detail, status, fieldErrors);
+    return new ApiRequestError(
+      normalizeUserFacingMessage(apiPayload.detail, fallbackMessage),
+      status,
+      fieldErrors
+    );
   }
 
   if (typeof apiPayload.error === "string") {
-    return new ApiRequestError(apiPayload.error, status, fieldErrors);
+    return new ApiRequestError(
+      normalizeUserFacingMessage(apiPayload.error, fallbackMessage),
+      status,
+      fieldErrors
+    );
   }
 
   if (typeof apiPayload.message === "string") {
-    return new ApiRequestError(apiPayload.message, status, fieldErrors);
+    return new ApiRequestError(
+      normalizeUserFacingMessage(apiPayload.message, fallbackMessage),
+      status,
+      fieldErrors
+    );
   }
 
   return new ApiRequestError(fallbackMessage, status, fieldErrors);
@@ -136,10 +191,22 @@ export async function apiFetch(
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(path, {
-    ...init,
-    headers,
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(path, {
+      ...init,
+      headers,
+    });
+  } catch (error) {
+    throw new ApiRequestError(
+      normalizeUserFacingMessage(
+        error instanceof Error ? error.message : null,
+        NETWORK_ERROR_MESSAGE
+      ),
+      0
+    );
+  }
 
   if (response.status === 401 && requiresAuth) {
     clearAccessToken();

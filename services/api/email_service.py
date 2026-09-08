@@ -5,6 +5,10 @@ import os
 import resend
 
 
+class EmailDeliveryError(RuntimeError):
+  pass
+
+
 def get_resend_api_key() -> str:
     api_key = os.getenv("RESEND_API_KEY")
 
@@ -45,20 +49,23 @@ def _build_reset_email_html(reset_url: str, expire_minutes: int) -> str:
 
 
 def send_password_reset_email(to_email: str, reset_url: str, expire_minutes: int) -> None:
+  try:
     resend.api_key = get_resend_api_key()
 
     text_body = (
-        "Solicitaste restablecer tu contraseña en Brasaland.\n"
-        f"Abre este enlace (válido por {expire_minutes} minutos, un solo uso): {reset_url}\n\n"
-        "Si no lo solicitaste, ignora este mensaje."
+      "Solicitaste restablecer tu contraseña en Brasaland.\n"
+      f"Abre este enlace (válido por {expire_minutes} minutos, un solo uso): {reset_url}\n\n"
+      "Si no lo solicitaste, ignora este mensaje."
     )
 
     resend.Emails.send(
-        {
-            "from": get_email_from(),
-            "to": [to_email],
-            "subject": "Restablece tu contraseña — Brasaland",
-            "html": _build_reset_email_html(reset_url, expire_minutes),
-            "text": text_body,
-        }
+      {
+        "from": get_email_from(),
+        "to": [to_email],
+        "subject": "Restablece tu contraseña — Brasaland",
+        "html": _build_reset_email_html(reset_url, expire_minutes),
+        "text": text_body,
+      }
     )
+  except Exception as error:  # pragma: no cover - depende del SDK externo
+    raise EmailDeliveryError("No se pudo enviar el correo de recuperación") from error

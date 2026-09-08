@@ -47,3 +47,33 @@ export function FieldLabel({ children }: { children: ReactNode }) {
     </label>
   );
 }
+
+export function ErrorState({
+  message,
+  onRetry,
+  actionLabel = "Reintentar",
+  secondaryAction,
+}: {
+  message: string;
+  onRetry?: () => void;
+  actionLabel?: string;
+  secondaryAction?: ReactNode;
+}) {
+  return (
+    <div className="rounded-[24px] bg-rose-100 px-5 py-6 text-rose-900">
+      <p className="text-sm leading-6">{message}</p>
+      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm font-semibold">
+        {onRetry ? (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="rounded-full border border-rose-300 px-4 py-2 transition hover:border-rose-500"
+          >
+            {actionLabel}
+          </button>
+        ) : null}
+        {secondaryAction}
+      </div>
+    </div>
+  );
+}
