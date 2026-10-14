@@ -24,8 +24,10 @@ from packages.incidents_analysis import (
     summary_to_csv,
 )
 from services.api.auth import get_current_active_user
+from services.api.database import init_inventory_db
 from services.api.routes import (
     auth_router,
+    inventory_router,
     profiles_router,
     suppliers_router,
     users_router,
@@ -57,6 +59,12 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(profiles_router)
 app.include_router(incidents_router)
+app.include_router(inventory_router)
+
+
+@app.on_event("startup")
+def on_startup() -> None:
+    init_inventory_db()
 
 
 @app.exception_handler(RequestValidationError)

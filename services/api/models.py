@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
+from sqlmodel import Field as SQLField, SQLModel
 
 from packages.shared.incidents import (
     validate_branch,
@@ -216,3 +217,32 @@ class IncidentSummary(BaseModel):
     by_category: dict[str, int]
     by_origin: dict[str, int]
     by_branch: dict[str, int]
+
+
+class Ingredient(SQLModel, table=True):
+    id: int | None = SQLField(default=None, primary_key=True)
+    name: str = SQLField(index=True)
+    sku: str = SQLField(index=True, unique=True)
+    unit: str
+    category: str = SQLField(index=True)
+    country: str = SQLField(index=True)
+
+
+class IngredientEntry(SQLModel, table=True):
+    id: int | None = SQLField(default=None, primary_key=True)
+    ingredient_id: int = SQLField(foreign_key="ingredient.id", index=True)
+    quantity: float = SQLField(gt=0)
+    supplier_name: str
+    location_id: int = SQLField(index=True)
+    created_at: datetime = SQLField(default_factory=lambda: datetime.now(timezone.utc))
+    user_uuid: str = SQLField(index=True)
+
+
+class IngredientExit(SQLModel, table=True):
+    id: int | None = SQLField(default=None, primary_key=True)
+    ingredient_id: int = SQLField(foreign_key="ingredient.id", index=True)
+    quantity: float = SQLField(gt=0)
+    reason: str
+    location_id: int = SQLField(index=True)
+    created_at: datetime = SQLField(default_factory=lambda: datetime.now(timezone.utc))
+    user_uuid: str = SQLField(index=True)
