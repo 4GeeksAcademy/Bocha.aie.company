@@ -40,6 +40,20 @@ export default function Home() {
           Gestionar proveedores
         </Link>
 
+        <Link
+          href="/inventory/products"
+          className="button secondaryButton"
+        >
+          Ver inventario
+        </Link>
+
+        <Link
+          href="/inventory/orders"
+          className="button secondaryButton"
+        >
+          Revisar movimientos
+        </Link>
+
       </section>
 
     </main>
