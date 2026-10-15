@@ -10,3 +10,5 @@ TODO.md
 CONTEXT0.md
 CONTEXT1.md
 CONTEXT2.md
+.env.*
+!.env.example
