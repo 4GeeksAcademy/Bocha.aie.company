@@ -66,6 +66,8 @@ export function AuthGuard({ children }: AuthGuardProps) {
             <Link href="/">Inicio</Link>
             <Link href="/incidents">Incidencias</Link>
             <Link href="/suppliers">Proveedores</Link>
+            <Link href="/inventory/products">Inventario</Link>
+            <Link href="/inventory/orders">Movimientos</Link>
             <Link href="/account/profile">Mi perfil</Link>
             <Link href="/account/change-password">Cambiar contraseña</Link>
             <LogoutButton />
