@@ -27,6 +27,11 @@ No se crean aplicaciones, APIs ni agentes de producto en esta fase.
 - Aplicado: corrección de la redirección de `AuthGuard` en la hidratación (ambos frontends) y etiquetas de formulario del Tracker. Documentado sin aplicar: contraste de `.eyebrow` (Backoffice) y del botón del perfil (Tracker).
 - Jest de Backoffice no corre: falta `jest`/`ts-jest` en `uis/backoffice/package.json`.
 
+## Auditoría de serialización (20/10/2026)
+
+- Rama `feature/serialization-audit`: informe en `docs/serialization-audit.md`, tests en `services/api/tests`.
+- Pendiente de confirmación (permisos): `PUT /users/{id}` permite a un no admin enviar `role`; `GET /users` abierto a cualquier autenticado; lecturas de inventario e incidencias sin autenticación.
+
 ## Próximos pasos
 
 1. Validar las decisiones pendientes con Tecnología y registrar la decisión aprobada.

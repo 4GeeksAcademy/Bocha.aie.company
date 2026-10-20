@@ -8,6 +8,7 @@ from tinydb.table import Document
 from services.api.auth import get_current_active_user
 from services.api.database import get_suppliers_table
 from services.api.models import (
+    MessageResponse,
     Supplier,
     SupplierCategory,
     SupplierCountry,
@@ -138,14 +139,14 @@ def update_supplier_status(
     return _document_to_supplier(document)
 
 
-@router.delete("/{supplier_id}")
+@router.delete("/{supplier_id}", response_model=MessageResponse)
 def delete_supplier(
     supplier_id: int,
     _: object = Depends(get_current_active_user),
-) -> dict[str, str]:
+) -> MessageResponse:
     table = get_suppliers_table()
     _find_supplier_document(supplier_id)
 
     table.remove(doc_ids=[supplier_id])
 
-    return {"message": "Proveedor eliminado"}
+    return MessageResponse(message="Proveedor eliminado")

@@ -25,6 +25,7 @@ from packages.incidents_analysis import (
 )
 from services.api.auth import get_current_active_user
 from services.api.database import init_inventory_db
+from services.api.models import IncidentAnalysisResult, RootResponse
 from services.api.routes import (
     auth_router,
     inventory_router,
@@ -86,20 +87,17 @@ logger = logging.getLogger(__name__)
 LAST_ANALYSIS = None
 
 
-@app.get("/")
-def root():
+@app.get("/", response_model=RootResponse)
+def root() -> RootResponse:
 
-    return {
-        "message":
-            (
-                "Brasaland Incidents "
-                "API is running"
-            )
-    }
+    return RootResponse(
+        message="Brasaland Incidents API is running"
+    )
 
 
 @app.post(
-    "/api/incidents/analyze"
+    "/api/incidents/analyze",
+    response_model=IncidentAnalysisResult,
 )
 async def analyze_incidents(
     file: UploadFile = File(...),
@@ -190,7 +188,14 @@ async def analyze_incidents(
 
 
 @app.get(
-    "/api/incidents/results/export"
+    "/api/incidents/results/export",
+    response_class=Response,
+    responses={
+        200: {
+            "content": {"text/csv": {"schema": {"type": "string"}}},
+            "description": "CSV con el último análisis (results.csv)",
+        }
+    },
 )
 def export_results(
     _: object = Depends(get_current_active_user),

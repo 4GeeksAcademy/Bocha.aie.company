@@ -17,8 +17,6 @@ type AuthMeResponse = {
 };
 
 type ProfileResponse = {
-  id: string;
-  user_id: string;
   name: string | null;
   phone: string | null;
   address: string | null;

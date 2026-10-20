@@ -5,7 +5,14 @@ from enum import Enum
 from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    EmailStr,
+    Field,
+    field_validator,
+    model_validator,
+)
 from sqlmodel import Field as SQLField, SQLModel
 
 from packages.shared.incidents import (
@@ -106,6 +113,14 @@ class Profile(ProfileBase):
     user_id: UUID
 
 
+class ProfileRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    name: str | None = None
+    phone: str | None = None
+    address: str | None = None
+
+
 class UserBase(BaseModel):
     email: EmailStr
 
@@ -134,7 +149,22 @@ class UserRead(UserBase):
     is_active: bool
     role: UserRole
     created_at: datetime
-    profile: Profile | None = None
+    profile: ProfileRead | None = None
+
+
+class UserListItem(UserBase):
+    id: UUID
+    is_active: bool
+    role: UserRole
+    created_at: datetime
+
+
+class MessageResponse(BaseModel):
+    message: str
+
+
+class RootResponse(BaseModel):
+    message: str
 
 
 class LoginResponse(BaseModel):
@@ -145,7 +175,7 @@ class LoginResponse(BaseModel):
 class AuthMeResponse(BaseModel):
     email: EmailStr
     role: UserRole
-    profile: Profile | None = None
+    profile: ProfileRead | None = None
 
 
 class ForgotPasswordRequest(BaseModel):
@@ -217,6 +247,30 @@ class IncidentSummary(BaseModel):
     by_category: dict[str, int]
     by_origin: dict[str, int]
     by_branch: dict[str, int]
+
+
+class BreakdownValue(BaseModel):
+    count: int
+    percentage: float
+
+
+class SatisfactionResult(BaseModel):
+    closed_cases: int
+    scored_cases: int
+    average: float | None
+    scores: dict[str, int]
+
+
+class IncidentAnalysisResult(BaseModel):
+    company: str
+    source_file: str
+    total_records: int
+    valid_records: int
+    invalid_records: int
+    invalid_breakdown: dict[str, int]
+    by_category: dict[str, BreakdownValue]
+    by_status: dict[str, BreakdownValue]
+    satisfaction: SatisfactionResult
 
 
 class Ingredient(SQLModel, table=True):

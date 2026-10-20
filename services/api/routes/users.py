@@ -5,7 +5,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from services.api.auth import get_current_active_user, hash_password
-from services.api.models import UserCreate, UserRead, UserRole, UserUpdate
+from services.api.models import MessageResponse, UserCreate, UserListItem, UserRead, UserRole, UserUpdate
 from services.api.users_service import (
     create_user,
     delete_user,
@@ -29,8 +29,8 @@ def register_user(payload: UserCreate) -> UserRead:
     return create_user(payload, hash_password(payload.password))
 
 
-@router.get("", response_model=list[UserRead])
-def get_users(_: UserRead = Depends(get_current_active_user)) -> list[UserRead]:
+@router.get("", response_model=list[UserListItem])
+def get_users(_: UserRead = Depends(get_current_active_user)) -> list[UserListItem]:
     return list_users()
 
 
@@ -58,11 +58,11 @@ def put_user(
     return update_user(user_id, payload)
 
 
-@router.delete("/{user_id}")
+@router.delete("/{user_id}", response_model=MessageResponse)
 def remove_user(
     user_id: UUID,
     current_user: UserRead = Depends(get_current_active_user),
-) -> dict[str, str]:
+) -> MessageResponse:
     _ensure_self_or_admin(current_user, user_id)
     delete_user(user_id)
-    return {"message": "Usuario eliminado"}
+    return MessageResponse(message="Usuario eliminado")
