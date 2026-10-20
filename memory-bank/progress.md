@@ -18,6 +18,14 @@ No se crean aplicaciones, APIs ni agentes de producto en esta fase.
 - Resolver el conflicto entre MongoDB/Motor/Beanie para la API central y SQLModel/PostgreSQL/Supabase más TinyDB descritos para el Hito 5 de inventario.
 - Confirmar el framework frontend de cada aplicación, salvo que lo determine un hito posterior.
 - Acordar los límites y contratos iniciales de los dominios antes de implementar la API central.
+- Registrar `uis/talent-pipeline-tracker` (Centro de incidencias, Next.js) en el mapa del monorepo; hoy existe pero no figura en `AGENTS.md` ni en las reglas.
+- Decidir si `uis/start.sh` debe servir builds de producción: hoy ejecuta `next dev`, lo que invalida las mediciones de rendimiento (ver `AUDIT.md`, problema 2).
+
+## Auditoría de rendimiento (20/10/2026)
+
+- Rama `perf/auditoria-lighthouse`: `AUDIT.md`, `REPORT.md` y evidencias en `audit/`.
+- Aplicado: corrección de la redirección de `AuthGuard` en la hidratación (ambos frontends) y etiquetas de formulario del Tracker. Documentado sin aplicar: contraste de `.eyebrow` (Backoffice) y del botón del perfil (Tracker).
+- Jest de Backoffice no corre: falta `jest`/`ts-jest` en `uis/backoffice/package.json`.
 
 ## Próximos pasos
 
