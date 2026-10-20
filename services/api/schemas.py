@@ -43,8 +43,13 @@ class IngredientCreate(IngredientBase):
     pass
 
 
-class IngredientRead(IngredientBase):
+class IngredientRead(BaseModel):
     id: int
+    name: str
+    sku: str
+    unit: str
+    category: Literal["meat", "produce", "sauce", "beverage", "packaging", "cleaning"]
+    country: Literal["CO", "US"]
     current_stock: float
 
 

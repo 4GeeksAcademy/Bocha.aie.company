@@ -11,7 +11,9 @@ from services.api.database import get_profiles_table, get_users_table
 from services.api.models import (
     Profile,
     ProfileCreate,
+    ProfileRead,
     UserCreate,
+    UserListItem,
     UserRead,
     UserRecord,
     UserRole,
@@ -118,9 +120,9 @@ def get_user_by_email(email: str) -> UserRecord | None:
     return _document_to_user(document)
 
 
-def list_users() -> list[UserRead]:
+def list_users() -> list[UserListItem]:
     table = get_users_table()
-    return [to_user_read(_document_to_user(document)) for document in table.all()]
+    return [to_user_list_item(_document_to_user(document)) for document in table.all()]
 
 
 def update_user(user_id: UUID, payload: UserUpdate) -> UserRead:
@@ -193,5 +195,15 @@ def to_user_read(user: UserRecord) -> UserRead:
         is_active=user.is_active,
         role=user.role,
         created_at=user.created_at,
-        profile=profile,
+        profile=ProfileRead.model_validate(profile) if profile else None,
+    )
+
+
+def to_user_list_item(user: UserRecord) -> UserListItem:
+    return UserListItem(
+        id=user.id,
+        email=user.email,
+        is_active=user.is_active,
+        role=user.role,
+        created_at=user.created_at,
     )
