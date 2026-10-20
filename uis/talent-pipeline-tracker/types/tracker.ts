@@ -4,6 +4,21 @@ export type CandidateStatus =
   | "selected"
   | "discarded";
 
+export type CandidateStatusTone = "neutral" | "warning" | "success" | "danger";
+
+export function candidateStatusTone(status: CandidateStatus): CandidateStatusTone {
+  switch (status) {
+    case "selected":
+      return "success";
+    case "discarded":
+      return "danger";
+    case "in_progress":
+      return "warning";
+    case "received":
+      return "neutral";
+  }
+}
+
 export type CandidateStage =
   | "pending"
   | "review"
