@@ -185,8 +185,9 @@ export default function AccountProfilePage() {
             ) : (
               <form className="grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
                 <div>
-                  <FieldLabel>Nombre</FieldLabel>
+                  <FieldLabel htmlFor="profile-name">Nombre</FieldLabel>
                   <input
+                    id="profile-name"
                     type="text"
                     value={form.name}
                     onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
@@ -195,8 +196,9 @@ export default function AccountProfilePage() {
                 </div>
 
                 <div>
-                  <FieldLabel>Teléfono</FieldLabel>
+                  <FieldLabel htmlFor="profile-phone">Teléfono</FieldLabel>
                   <input
+                    id="profile-phone"
                     type="tel"
                     value={form.phone}
                     onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))}
@@ -205,8 +207,9 @@ export default function AccountProfilePage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <FieldLabel>Dirección</FieldLabel>
+                  <FieldLabel htmlFor="profile-address">Dirección</FieldLabel>
                   <input
+                    id="profile-address"
                     type="text"
                     value={form.address}
                     onChange={(event) => setForm((current) => ({ ...current, address: event.target.value }))}

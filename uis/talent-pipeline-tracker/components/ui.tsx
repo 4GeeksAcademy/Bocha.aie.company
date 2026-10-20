@@ -40,9 +40,9 @@ export function StatusPill({
   );
 }
 
-export function FieldLabel({ children }: { children: ReactNode }) {
+export function FieldLabel({ children, htmlFor }: { children: ReactNode; htmlFor?: string }) {
   return (
-    <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-stone-600">
+    <label htmlFor={htmlFor} className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-stone-600">
       {children}
     </label>
   );

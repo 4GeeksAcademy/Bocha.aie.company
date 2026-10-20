@@ -7,23 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CandidateForm } from "@/components/candidate-form";
 import { ErrorState, SectionCard, StatusPill } from "@/components/ui";
 import { createRecord, getRecords } from "@/lib/tracker-api";
-import { stageOptions, statusOptions, type CandidateRecord } from "@/types/tracker";
-
-function badgeTone(status: CandidateRecord["status"]) {
-  if (status === "selected") {
-    return "success" as const;
-  }
-
-  if (status === "discarded") {
-    return "danger" as const;
-  }
-
-  if (status === "in_progress") {
-    return "warning" as const;
-  }
-
-  return "neutral" as const;
-}
+import { candidateStatusTone, stageOptions, statusOptions, type CandidateRecord } from "@/types/tracker";
 
 function getLabel<T extends { value: string; label: string }>(options: T[], value: string) {
   return options.find((option) => option.value === value)?.label ?? value;
@@ -240,7 +224,7 @@ export function CandidateListPage() {
                               <h2 className="text-xl font-semibold text-stone-950">
                                 {record.full_name}
                               </h2>
-                              <StatusPill tone={badgeTone(record.status)}>
+                              <StatusPill tone={candidateStatusTone(record.status)}>
                                 {getLabel(statusOptions, record.status)}
                               </StatusPill>
                             </div>

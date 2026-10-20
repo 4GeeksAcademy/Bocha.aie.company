@@ -16,6 +16,11 @@ type AuthGuardProps = {
   children: ReactNode;
 };
 
+const subscribeToToken = () => () => undefined;
+
+// `undefined` = sesión aún no leída (SSR e hidratación); `null` = sin sesión.
+const getServerToken = (): string | null | undefined => undefined;
+
 export function AuthGuard({ children }: AuthGuardProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -23,14 +28,17 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   const publicRoute = isPublicRoute(pathname);
   const currentSearch = searchParams.toString();
-  const token = useSyncExternalStore(
-    () => () => undefined,
-    getAccessToken,
-    () => null
-  );
+  const token = useSyncExternalStore(subscribeToToken, getAccessToken, getServerToken);
+  const sessionResolved = token !== undefined;
   const authenticated = Boolean(token);
 
   useEffect(() => {
+    // El commit de hidratación usa el snapshot del servidor: redirigir aquí
+    // mandaría a /login a usuarios con sesión válida.
+    if (!sessionResolved) {
+      return;
+    }
+
     if (!authenticated && !publicRoute) {
       router.replace(buildLoginHref(pathname, currentSearch ? `?${currentSearch}` : ""));
       return;
@@ -40,9 +48,9 @@ export function AuthGuard({ children }: AuthGuardProps) {
       router.replace(DEFAULT_AUTHENTICATED_ROUTE);
     }
 
-  }, [authenticated, currentSearch, pathname, publicRoute, router]);
+  }, [authenticated, currentSearch, pathname, publicRoute, router, sessionResolved]);
 
-  if (token === null && !publicRoute) {
+  if (!sessionResolved && !publicRoute) {
     return <div className="authSplash">Verificando sesión...</div>;
   }
 

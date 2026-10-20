@@ -15,6 +15,7 @@ import {
   replaceRecord,
 } from "@/lib/tracker-api";
 import {
+  candidateStatusTone,
   stageOptions,
   statusOptions,
   type CandidateNote,
@@ -34,22 +35,6 @@ function formatDate(value: string) {
 
 function labelFor(options: Array<{ value: string; label: string }>, value: string) {
   return options.find((option) => option.value === value)?.label ?? value;
-}
-
-function statusTone(status: CandidateRecord["status"]) {
-  if (status === "selected") {
-    return "success" as const;
-  }
-
-  if (status === "discarded") {
-    return "danger" as const;
-  }
-
-  if (status === "in_progress") {
-    return "warning" as const;
-  }
-
-  return "neutral" as const;
 }
 
 export function CandidateDetailPage({ candidateId }: CandidateDetailPageProps) {
@@ -281,7 +266,7 @@ export function CandidateDetailPage({ candidateId }: CandidateDetailPageProps) {
             <p className="mt-2 text-base text-stone-600">{candidate.position}</p>
           </div>
 
-          <StatusPill tone={statusTone(candidate.status)}>
+          <StatusPill tone={candidateStatusTone(candidate.status)}>
             {labelFor(statusOptions, candidate.status)}
           </StatusPill>
         </div>
