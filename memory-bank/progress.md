@@ -32,6 +32,13 @@ No se crean aplicaciones, APIs ni agentes de producto en esta fase.
 - Rama `feature/serialization-audit`: informe en `docs/serialization-audit.md`, tests en `services/api/tests`.
 - Pendiente de confirmación (permisos): `PUT /users/{id}` permite a un no admin enviar `role`; `GET /users` abierto a cualquier autenticado; lecturas de inventario e incidencias sin autenticación.
 
+## Caching (21/10/2026)
+
+- Rama `feature/caching-optimisation`: informe en `CACHING_REPORT.md`.
+- Backend: `services/api/cache.py` (TTL en memoria por proceso); cacheados `GET /inventory/products` y `/inventory/products/{id}` (TTL 60 s, invalidados en escrituras de inventario). Middleware de timing en `main.py`.
+- Seed masivo `services/api/seed_inventory_bulk.py` ejecutado en Supabase (filas `BRS-BULK-*`, reversible con `--reset`).
+- Pendiente: paginar `GET /inventory/orders` (2,5 s, 7,8 MB); `pytest` no instalado en `myenv`.
+
 ## Próximos pasos
 
 1. Validar las decisiones pendientes con Tecnología y registrar la decisión aprobada.

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, func, select
 
 from services.api.auth import get_current_active_user
+from services.api.cache import cache
 from services.api.database import get_session
 from services.api.models import Ingredient, IngredientEntry, IngredientExit, UserRead
 from services.api.schemas import (
@@ -18,12 +19,21 @@ from services.api.schemas import (
 
 router = APIRouter(prefix="/inventory", tags=["inventory"])
 
+PRODUCTS_CACHE_PREFIX = "inventory:products"
+PRODUCTS_LIST_TTL_SECONDS = 60
+PRODUCT_DETAIL_TTL_SECONDS = 60
+
+
+def _invalidate_products_cache() -> None:
+    cache.invalidate_prefix(PRODUCTS_CACHE_PREFIX)
+
 
 def _get_ingredient_or_404(session: Session, ingredient_id: int) -> Ingredient:
     ingredient = session.get(Ingredient, ingredient_id)
 
     if ingredient is None:
-        raise HTTPException(status_code=404, detail="Ingrediente no encontrado")
+        raise HTTPException(
+            status_code=404, detail="Ingrediente no encontrado")
 
     return ingredient
 
@@ -42,8 +52,10 @@ def _build_stock_maps(session: Session) -> tuple[dict[int, float], dict[int, flo
         ).group_by(IngredientExit.ingredient_id)
     ).all()
 
-    entries = {ingredient_id: float(total or 0) for ingredient_id, total in entry_rows}
-    exits = {ingredient_id: float(total or 0) for ingredient_id, total in exit_rows}
+    entries = {ingredient_id: float(total or 0)
+               for ingredient_id, total in entry_rows}
+    exits = {ingredient_id: float(total or 0)
+             for ingredient_id, total in exit_rows}
     return entries, exits
 
 
@@ -86,7 +98,8 @@ def _to_ingredient_read(ingredient: Ingredient, current_stock: float) -> Ingredi
 
 def _to_inbound_order_read(order: IngredientEntry, ingredient: Ingredient) -> InventoryOrderRead:
     if order.id is None or ingredient.id is None:
-        raise HTTPException(status_code=500, detail="Orden de entrada inválida")
+        raise HTTPException(
+            status_code=500, detail="Orden de entrada inválida")
 
     return InventoryOrderRead(
         id=order.id,
@@ -118,13 +131,23 @@ def _to_outbound_order_read(order: IngredientExit, ingredient: Ingredient) -> In
 
 @router.get("/products", response_model=list[IngredientRead])
 def list_products(session: Session = Depends(get_session)) -> list[IngredientRead]:
-    ingredients = session.exec(select(Ingredient).order_by(Ingredient.id)).all()
+    return cache.get_or_set(
+        f"{PRODUCTS_CACHE_PREFIX}:list",
+        PRODUCTS_LIST_TTL_SECONDS,
+        lambda: _load_products(session),
+    )
+
+
+def _load_products(session: Session) -> list[IngredientRead]:
+    ingredients = session.exec(
+        select(Ingredient).order_by(Ingredient.id)).all()
     entry_totals, exit_totals = _build_stock_maps(session)
 
     return [
         _to_ingredient_read(
             ingredient,
-            entry_totals.get(ingredient.id or 0, 0.0) - exit_totals.get(ingredient.id or 0, 0.0),
+            entry_totals.get(ingredient.id or 0, 0.0) -
+            exit_totals.get(ingredient.id or 0, 0.0),
         )
         for ingredient in ingredients
         if ingredient.id is not None
@@ -139,23 +162,32 @@ def create_product(
 ) -> IngredientRead:
     del current_user
 
-    existing = session.exec(select(Ingredient).where(Ingredient.sku == payload.sku)).first()
+    existing = session.exec(select(Ingredient).where(
+        Ingredient.sku == payload.sku)).first()
 
     if existing is not None:
-        raise HTTPException(status_code=409, detail="Ya existe un ingrediente con ese sku")
+        raise HTTPException(
+            status_code=409, detail="Ya existe un ingrediente con ese sku")
 
     ingredient = Ingredient(**payload.model_dump())
     session.add(ingredient)
     session.commit()
     session.refresh(ingredient)
+    _invalidate_products_cache()
 
     return _to_ingredient_read(ingredient, 0.0)
 
 
 @router.get("/products/{ingredient_id}", response_model=IngredientRead)
 def get_product(ingredient_id: int, session: Session = Depends(get_session)) -> IngredientRead:
-    ingredient = _get_ingredient_or_404(session, ingredient_id)
-    return _to_ingredient_read(ingredient, _calculate_stock(session, ingredient_id))
+    return cache.get_or_set(
+        f"{PRODUCTS_CACHE_PREFIX}:{ingredient_id}",
+        PRODUCT_DETAIL_TTL_SECONDS,
+        lambda: _to_ingredient_read(
+            _get_ingredient_or_404(session, ingredient_id),
+            _calculate_stock(session, ingredient_id),
+        ),
+    )
 
 
 @router.post("/orders/inbound", response_model=InventoryOrderRead, status_code=status.HTTP_201_CREATED)
@@ -176,6 +208,7 @@ def create_inbound_order(
     session.add(order)
     session.commit()
     session.refresh(order)
+    _invalidate_products_cache()
 
     ingredient = _get_ingredient_or_404(session, payload.ingredient_id)
     return _to_inbound_order_read(order, ingredient)
@@ -209,6 +242,7 @@ def create_outbound_order(
     session.add(order)
     session.commit()
     session.refresh(order)
+    _invalidate_products_cache()
 
     return _to_outbound_order_read(order, ingredient)
 

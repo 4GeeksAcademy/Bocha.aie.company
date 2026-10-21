@@ -1,3 +1,4 @@
+import time
 from fastapi import (
     Depends,
     FastAPI,
@@ -106,7 +107,6 @@ async def analyze_incidents(
 
     global LAST_ANALYSIS
 
-
     if not file.filename:
 
         raise HTTPException(
@@ -116,7 +116,6 @@ async def analyze_incidents(
                 "no tiene nombre."
             ),
         )
-
 
     if not (
         file.filename
@@ -132,9 +131,7 @@ async def analyze_incidents(
             ),
         )
 
-
     content = await file.read()
-
 
     if not content:
 
@@ -145,13 +142,11 @@ async def analyze_incidents(
             ),
         )
 
-
     try:
 
         text = content.decode(
             "utf-8-sig"
         )
-
 
     except UnicodeDecodeError as error:
 
@@ -164,14 +159,12 @@ async def analyze_incidents(
             ),
         ) from error
 
-
     try:
 
         result = analyze_csv_text(
             text=text,
             source_file=file.filename,
         )
-
 
     except ValueError as error:
 
@@ -180,9 +173,7 @@ async def analyze_incidents(
             detail=str(error),
         ) from error
 
-
     LAST_ANALYSIS = result
-
 
     return result
 
@@ -212,13 +203,11 @@ def export_results(
             ),
         )
 
-
     csv_content = (
         summary_to_csv(
             LAST_ANALYSIS
         )
     )
-
 
     return Response(
         content=csv_content,
@@ -233,6 +222,7 @@ def export_results(
                 )
         },
     )
+
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
@@ -254,3 +244,25 @@ async def generic_exception_handler(request: Request, exc: Exception):
             "message": "No se pudo completar la operación",
         },
     )
+
+
+timing_logger = logging.getLogger("api.timing")
+timing_logger.setLevel(logging.INFO)
+# Uvicorn no configura este logger: sin handler propio los INFO no se ven.
+if not timing_logger.handlers:
+    timing_logger.addHandler(logging.StreamHandler())
+
+
+@app.middleware("http")
+async def timing_middleware(request: Request, call_next):
+    start = time.perf_counter()
+    response = await call_next(request)
+    duration = (time.perf_counter() - start) * 1000  # ms
+
+    path = request.url.path
+    if request.url.query:
+        path = f"{path}?{request.url.query}"
+    timing_logger.info(
+        f"{request.method} {path} -> {response.status_code} | {duration:.1f}ms"
+    )
+    return response
