@@ -1,11 +1,20 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { CandidateForm } from "@/components/candidate-form";
 import { ErrorState, FieldLabel, SectionCard, StatusPill } from "@/components/ui";
+
+// Formulario de edición secundario: solo se pinta cuando la candidatura ya ha cargado.
+const CandidateForm = dynamic(
+  () => import("@/components/candidate-form").then((mod) => mod.CandidateForm),
+  {
+    ssr: false,
+    loading: () => <p className="text-sm text-stone-500">Cargando formulario...</p>,
+  }
+);
 import {
   createNote,
   deleteNote,

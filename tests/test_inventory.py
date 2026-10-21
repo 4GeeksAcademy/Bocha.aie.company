@@ -7,6 +7,7 @@ from fastapi import HTTPException
 from sqlmodel import SQLModel, Session
 
 from services.api import auth
+from services.api.cache import cache
 from services.api.database import get_engine
 from services.api.models import Ingredient, IngredientEntry, IngredientExit, ProfileCreate, UserCreate
 from services.api.routes.inventory import (
@@ -24,7 +25,8 @@ def _make_user(email: str = "inventory@example.com"):
     payload = UserCreate(
         email=email,
         password="password123",
-        profile=ProfileCreate(name="Inventario", phone="12345", address="Calle 10"),
+        profile=ProfileCreate(
+            name="Inventario", phone="12345", address="Calle 10"),
     )
     create_user(payload, auth.hash_password("password123"))
     return auth.to_user_read(get_user_by_email(email))
@@ -35,6 +37,7 @@ def inventory_session(tmp_path, monkeypatch):
     sqlite_path = tmp_path / "inventory.db"
     monkeypatch.setenv("DATABASE_URL", f"sqlite:///{sqlite_path}")
     get_engine.cache_clear()
+    cache.clear()
 
     engine = get_engine()
     SQLModel.metadata.create_all(engine)

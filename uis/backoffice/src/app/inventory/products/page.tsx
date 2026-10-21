@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { InventoryNav } from "@/components/inventory-nav";
 import {
@@ -75,10 +75,20 @@ export default function InventoryProductsPage() {
     };
   }, [reloadKey]);
 
-  const criticalCount = ingredients.filter((ingredient) => ingredient.current_stock < CRITICAL_STOCK_THRESHOLD).length;
-  const lowCount = ingredients.filter(
-    (ingredient) => ingredient.current_stock >= CRITICAL_STOCK_THRESHOLD && ingredient.current_stock < LOW_STOCK_THRESHOLD
-  ).length;
+  const { rows, criticalCount, lowCount } = useMemo(() => {
+    let critical = 0;
+    let low = 0;
+    const classified = ingredients.map((ingredient) => {
+      const stockLevel = getStockLevel(ingredient.current_stock);
+      if (ingredient.current_stock < CRITICAL_STOCK_THRESHOLD) {
+        critical += 1;
+      } else if (ingredient.current_stock < LOW_STOCK_THRESHOLD) {
+        low += 1;
+      }
+      return { ingredient, stockLevel };
+    });
+    return { rows: classified, criticalCount: critical, lowCount: low };
+  }, [ingredients]);
 
   return (
     <main className="container">
@@ -151,9 +161,7 @@ export default function InventoryProductsPage() {
                 </tr>
               </thead>
               <tbody>
-                {ingredients.map((ingredient) => {
-                  const stockLevel = getStockLevel(ingredient.current_stock);
-
+                {rows.map(({ ingredient, stockLevel }) => {
                   return (
                     <tr key={ingredient.id}>
                       <td>
