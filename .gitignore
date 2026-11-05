@@ -14,3 +14,38 @@ CONTEXT2.md
 !.env.example
 prompt-copilot-auditoria-serializacion.md
 guion.md
+
+# Node.js and frontend build output
+node_modules/
+.next/
+out/
+dist/
+build/
+.turbo/
+.cache/
+*.tsbuildinfo
+
+# Test output and Python tooling caches
+coverage/
+playwright-report/
+test-results/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+.eggs/
+*.egg-info/
+venv/
+
+# Logs, editor temporary files, and operating system metadata
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini

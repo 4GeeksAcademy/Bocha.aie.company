@@ -42,8 +42,8 @@ No se crean aplicaciones, APIs ni agentes de producto en esta fase.
 ## Sitio estatico en Docker (05/11/2026)
 
 - Dockerfile en la raiz para servir el `index.html` existente con Nginx en el puerto 80 del contenedor, junto con estilos, assets y formulario.
-- Ejecucion independiente: `docker build -t brasaland-web .` y `docker run -d --name brasaland-web -p 80:80 brasaland-web`.
-- No modifica los servicios del Compose existente ni mueve el sitio a otra ruta.
+- Integrado en Docker Compose como servicio `website`, con el puerto `80:80`. Ejecucion: `docker compose up -d --build website`.
+- Conserva los servicios existentes y no mueve el sitio a otra ruta.
 
 ## Próximos pasos
 
