@@ -39,6 +39,12 @@ No se crean aplicaciones, APIs ni agentes de producto en esta fase.
 - Seed masivo `services/api/seed_inventory_bulk.py` ejecutado en Supabase (filas `BRS-BULK-*`, reversible con `--reset`).
 - Pendiente: paginar `GET /inventory/orders` (2,5 s, 7,8 MB); `pytest` no instalado en `myenv`.
 
+## Sitio estatico en Docker (05/11/2026)
+
+- Dockerfile en la raiz para servir el `index.html` existente con Nginx en el puerto 80 del contenedor, junto con estilos, assets y formulario.
+- Ejecucion independiente: `docker build -t brasaland-web .` y `docker run -d --name brasaland-web -p 80:80 brasaland-web`.
+- No modifica los servicios del Compose existente ni mueve el sitio a otra ruta.
+
 ## Próximos pasos
 
 1. Validar las decisiones pendientes con Tecnología y registrar la decisión aprobada.
