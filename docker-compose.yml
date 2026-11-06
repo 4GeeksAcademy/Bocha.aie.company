@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
 
     ports:
-      - "80:80"
+      - "${WEBSITE_PORT:-8080}:80"
 
     networks:
       - company_network
@@ -16,14 +16,11 @@ services:
       dockerfile: Dockerfile
 
     ports:
-      - "3000:3000"
-      - "3001:3001"
+      - "${TRACKER_PORT:-3002}:3000"
+      - "${BACKOFFICE_PORT:-3003}:3001"
 
     environment:
       INTERNAL_BACKEND_URL: http://backend:8000
-
-    extra_hosts:
-      - "backend:host-gateway"
 
     volumes:
       - ./uis:/app
@@ -44,7 +41,7 @@ services:
       dockerfile: services/api/Dockerfile
 
     ports:
-      - "8000:8000"
+      - "${API_PORT:-8000}:8000"
 
     env_file:
       - ./services/api/.env

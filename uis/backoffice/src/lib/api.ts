@@ -138,17 +138,17 @@ function buildApiError(payload: unknown, status: number, fallbackMessage: string
     );
   }
 
-  if (typeof apiPayload.error === "string") {
+  if (typeof apiPayload.message === "string") {
     return new ApiRequestError(
-      normalizeUserFacingMessage(apiPayload.error, fallbackMessage),
+      normalizeUserFacingMessage(apiPayload.message, fallbackMessage),
       status,
       fieldErrors
     );
   }
 
-  if (typeof apiPayload.message === "string") {
+  if (typeof apiPayload.error === "string") {
     return new ApiRequestError(
-      normalizeUserFacingMessage(apiPayload.message, fallbackMessage),
+      normalizeUserFacingMessage(apiPayload.error, fallbackMessage),
       status,
       fieldErrors
     );

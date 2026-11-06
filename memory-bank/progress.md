@@ -45,6 +45,15 @@ No se crean aplicaciones, APIs ni agentes de producto en esta fase.
 - Integrado en Docker Compose como servicio `website`, con el puerto `80:80`. Ejecucion: `docker compose up -d --build website`.
 - Conserva los servicios existentes y no mueve el sitio a otra ruta.
 
+## Puertos locales en Docker (06/11/2026)
+
+- `docker-compose.yml`: puertos configurables con `WEBSITE_PORT` (8080), `TRACKER_PORT` (3002), `BACKOFFICE_PORT` (3003) y `API_PORT` (8000); sustituye el `80:80` indicado arriba.
+- Retirado `extra_hosts`: `backend` resuelve al contenedor de FastAPI y no al host.
+- Se mantiene el modo desarrollo (`next dev`, volúmenes y `--reload`); la configuración de producción del repo de deimian no se incorporó.
+- En esta PC el 8080 lo ocupa `Tomcat9`: definir `WEBSITE_PORT=8081` en el `.env` de la raíz.
+- Verificado: sitio, Tracker, Backoffice y `/docs` HTTP 200; `/backend/*` llega a FastAPI desde ambos frontends; `POST /backend/users` sin email HTTP 422, sin crear usuarios.
+- Backoffice: `api.ts` prioriza `message` sobre `error`, y `tsconfig.json` excluye `__tests__` (los tests no tienen tipos de Jest instalados).
+
 ## Próximos pasos
 
 1. Validar las decisiones pendientes con Tecnología y registrar la decisión aprobada.

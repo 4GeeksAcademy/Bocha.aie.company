@@ -3,7 +3,12 @@ import type { NextConfig } from "next";
 const backendBaseUrl = process.env.INTERNAL_BACKEND_URL ?? "http://backend:8000";
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["127.0.0.1"],
+
+  allowedDevOrigins: (process.env.NEXT_ALLOWED_DEV_ORIGINS ?? "127.0.0.1")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean),
+
   async rewrites() {
     return [
       {
