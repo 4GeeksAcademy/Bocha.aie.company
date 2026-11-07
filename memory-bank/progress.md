@@ -54,6 +54,13 @@ No se crean aplicaciones, APIs ni agentes de producto en esta fase.
 - Verificado: sitio, Tracker, Backoffice y `/docs` HTTP 200; `/backend/*` llega a FastAPI desde ambos frontends; `POST /backend/users` sin email HTTP 422, sin crear usuarios.
 - Backoffice: `api.ts` prioriza `message` sobre `error`, y `tsconfig.json` excluye `__tests__` (los tests no tienen tipos de Jest instalados).
 
+## Modo producción para el VPS (06/11/2026)
+
+- Diagnóstico externo de `157.245.87.27`: sirve `next dev` en 3002/3003 y bloquea su JavaScript con 403 por origen no permitido; por eso el login no envía la petición. El 80 no responde. No se pudo revisar el servidor por SSH.
+- `docker-compose.prod.yml`: `next start` compilado en la imagen, sitio en el 80, API sin publicar, sin `--reload` y con `inventory.db` y `suppliers_db.json` montados para conservar datos.
+- `uis/Dockerfile` y `uis/start.sh` eligen el modo con `APP_ENV`; `docker-compose.yml` sigue siendo desarrollo local.
+- Verificado en local con un stack aislado y un dominio simulado: login HTTP 200 en ambas apps. Pendiente: confirmar qué repo despliega el VPS y aplicarlo allí.
+
 ## Próximos pasos
 
 1. Validar las decisiones pendientes con Tecnología y registrar la decisión aprobada.

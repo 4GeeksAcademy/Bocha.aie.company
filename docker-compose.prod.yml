@@ -1,0 +1,25 @@
+# Producción: docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
+services:
+  website:
+    ports: !override
+      - "80:80"
+
+  interfaces:
+    build:
+      args:
+        APP_ENV: production
+        INTERNAL_BACKEND_URL: http://backend:8000
+
+    environment:
+      APP_ENV: production
+
+    volumes: !reset []
+
+  backend:
+    ports: !reset []
+
+    volumes: !override
+      - ./services/api/inventory.db:/workspace/services/api/inventory.db
+      - ./services/api/suppliers_db.json:/workspace/services/api/suppliers_db.json
+
+    command: !override [ "uvicorn", "services.api.main:app", "--host", "0.0.0.0", "--port", "8000" ]
